@@ -1,0 +1,3 @@
+parameters:
+  dollar: $
+  a: ${dollar}{catalina.base}

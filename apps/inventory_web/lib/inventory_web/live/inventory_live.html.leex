@@ -1,0 +1,25 @@
+<%#
+ SPDX-FileCopyrightText: 2021 Michael Jansen <info@michael-jansen.biz>
+ SPDX-License-Identifier: CC0-1.0
+%>
+<div>
+    <%= if @live_action == :show_class do %>
+        <%= render(MJ.InventoryWeb.ClassView, "_show.html", assigns) %>
+    <% end %>
+
+    <%= if @live_action == :show_node do %>
+        <%= render(MJ.InventoryWeb.ClassView, "_show.html", assigns) %>
+    <% end %>
+
+    <%= if @live_action == :index_classes do %>
+        <%= render(MJ.InventoryWeb.ClassView, "_list.html", assigns) %>
+    <% end %>
+
+    <%= if @live_action == :index_nodes do %>
+        <%= render(MJ.InventoryWeb.ClassView, "_list.html", assigns) %>
+    <% end %>
+
+    <%= if @live_action == :index_errors do %>
+        <%= render(MJ.InventoryWeb.ClassView, "_errors.html", errors: @errors, socket: @socket) %>
+    <% end %>
+</div>

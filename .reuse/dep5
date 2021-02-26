@@ -1,0 +1,9 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: mj inventory
+Upstream-Contact: Michael Jansen <info@michael-jansen.biz>
+Source: http://michael-jansen.biz
+
+Files: apps/inventory/test/data/**
+Copyright: 2021 Michael Jansen <info@michael-jansen.biz>
+License: CC0-1.0
+

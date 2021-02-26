@@ -1,0 +1,9 @@
+# Install software required for elixir development
+classes:
+  - software.development
+  - software.development-erlang
+
+parameters:
+  packages:
+    - elixir
+    - elixir-doc

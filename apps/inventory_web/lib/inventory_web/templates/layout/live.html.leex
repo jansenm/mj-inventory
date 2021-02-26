@@ -1,0 +1,47 @@
+<%#
+ SPDX-FileCopyrightText: 2021 Michael Jansen <info@michael-jansen.biz>
+ SPDX-License-Identifier: CC0-1.0
+%>
+<header>
+    <nav role="navigation" class="navbar is-dark is-spaced" aria-label="main navigation">
+        <div class="container">
+            <div class="navbar-brand">
+                <!-- navbar items, navbar burger... -->
+            </div>
+            <div class="navbar-menu">
+                <!-- navbar start, navbar end -->
+                <div class="navbar-start">
+                    <%= live_patch "Errors", to: Routes.inventory_path(@socket, :index_errors), class: @live_action == :index_errors && "navbar-item is-active" || "navbar-item"  %> </li>
+                    <%= live_patch "Classes", to: Routes.inventory_path(@socket, :index_classes), class: @live_action == :index_classes && "navbar-item is-active" || "navbar-item" %> </li>
+                    <%= live_patch "Nodes", to: Routes.inventory_path(@socket, :index_nodes), class: @live_action == :index_nodes && "navbar-item is-active" || "navbar-item"  %> </li>
+                    <%= live_patch "RELOAD", to: Routes.inventory_path(@socket, :reload), class: @live_action == :reload && "navbar-item is-active" || "navbar-item"  %> </li>
+                </div>
+                <div class="navbar-end">
+                    <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
+                    <%= link "LiveDashboard", class: "navbar-item", to: Routes.live_dashboard_path(@socket, :home) %>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main role="main">
+
+    <section class="section">
+        <div class="container">
+            <p class="alert alert-danger" role="alert"
+               phx-click="lv:clear-flash"
+               phx-value-key="error"><%= live_flash(@flash, :error) %></p>
+            <p class="alert alert-info" role="alert"
+               phx-click="lv:clear-flash"
+               phx-value-key="info"><%= live_flash(@flash, :info) %></p>
+        </div>
+    </section>
+
+    <%= @inner_content %>
+</main>
+
+<footer class="footer has-text-centered">
+    <p>Copyright 2021 Michael Jansen</p>
+</footer>

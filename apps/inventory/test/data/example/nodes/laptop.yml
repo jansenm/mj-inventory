@@ -1,0 +1,9 @@
+classes:
+  - "hardware.laptop"
+  - "distribution.opensuse.tumbleweed"
+  - "software.development-cpp"
+  - "software.development-elixir"
+  - "software.development-erlang"
+  - "software.development"
+parameters:
+  name: "laptop.local"

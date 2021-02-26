@@ -1,0 +1,32 @@
+<%#
+ SPDX-FileCopyrightText: 2021 Michael Jansen <info@michael-jansen.biz>
+ SPDX-License-Identifier: CC0-1.0
+%>
+<div class="container box">
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+      <ul class="is-size-3">
+        <%= if @type == "class" do %>
+            <li class="is-active"><a href="#" aria-current="page">Classes</a></li>
+        <% else %>
+            <li class="is-active"><a href="#" aria-current="page">Nodes</a></li>
+        <% end %>
+      </ul>
+    </nav>
+
+    <div class="content">
+        <table class="table is-striped is-fullwidth">
+            <thead>
+            </thead>
+            <tbody>
+            <%= for  [obj, badges] <- Enum.sort(@objects) do %>
+            <tr>
+                <td><%= live_patch obj, to: Routes.inventory_path(@socket, :"show_#{@type}", obj) %>
+                <%= if :invalid in badges do %><span class="tag is-danger">invalid</span><% end %>
+                <%= if :unused in badges do %><span class="tag is-info">unused</span><% end %>
+                </td>
+            </tr>
+            <% end %>
+            </tbody>
+        </table>
+    </div>
+</section>

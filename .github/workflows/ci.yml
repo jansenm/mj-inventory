@@ -1,0 +1,93 @@
+name: CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+
+      #
+      ### CHECKOUT
+      - uses: actions/checkout@v2
+
+      #
+      ### SETUP VERSIONS
+      - uses: actions/setup-elixir@v1.0.0
+        with:
+          otp-version: 23.2.1
+          elixir-version: 1.11.2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+
+      #
+      ### SETUP/CACHE DEPENDENCIES
+      - uses: actions/cache@v1
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+      - run: mix local.rebar --force
+      - run: mix local.hex --force
+      - run: mix deps.get
+      - run: mix deps.compile
+
+      #
+      ### SETUP/CACHE NODE STUFF
+      - uses: actions/cache@v1
+        with:
+          path: apps/inventory_web/assets/node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles(format('{0}{1}', github.workspace, '/apps/inventory_web/assets/package-lock.json')) }}
+      - run: npm install --prefix assets
+        working-directory: apps/inventory_web
+      - run: npm run deploy --prefix assets
+        working-directory: apps/inventory_web
+      - run: mix phx.digest
+        working-directory: apps/inventory_web
+
+      #
+      ### BUILD
+      - run: mix compile
+      - run: mix docs
+      - run: |
+          mix credo || (
+          rc=$?
+
+          # Only fail on warnings
+          if (( $rc & 0x10 )) ; then
+          echo "We have warnings"
+          exit 1;
+          fi
+          )
+
+      #
+      ### TEST
+      - run: mix compile
+        env:
+          MIX_ENV: test
+
+      - run: mix test
+        env:
+          MIX_ENV: test
+
+      - run: mix test --cover
+        env:
+          MIX_ENV: test
+
+      #
+      ### DIALYZER
+      - name: Retrieve PLT Cache
+        uses: actions/cache@v1
+        id: plt-cache
+        with:
+          path: '_build/dev/dialyxir*'
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+
+      - name: Create PLTs
+        if: steps.plt-cache.outputs.cache-hit != 'true'
+        run: |
+          mix dialyzer --plt
+
+      - name: Run dialyzer
+        run: mix dialyzer --no-check --halt-exit-status

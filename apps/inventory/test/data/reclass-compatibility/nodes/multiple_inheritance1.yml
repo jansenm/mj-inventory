@@ -1,0 +1,7 @@
+classes:
+  - motd2
+  - motd1
+parameters:
+  # We include motd2 which includes motd1 but overrides the message. Even if we include
+  # motd1 AGAIN after motd2 that does not change anything.
+  motd_expected: "hello from motd2"

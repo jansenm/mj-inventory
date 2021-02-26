@@ -1,0 +1,5 @@
+# SPDX-FileCopyrightText: 2021 Michael Jansen <info@michael-jansen.biz>
+# SPDX-License-Identifier: CC0-1.0
+erlang 23.2.1
+elixir 1.11.2-otp-23
+nodejs 12.20.0

@@ -1,0 +1,9 @@
+// SPDX-FileCopyrightText: 2021 Michael Jansen <info@michael-jansen.biz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+@charset "utf-8";
+@import "~bulma/bulma.sass";
+
+p > p.level {
+  padding-left: 3cm
+}

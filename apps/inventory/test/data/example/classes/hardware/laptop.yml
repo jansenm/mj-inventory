@@ -1,0 +1,8 @@
+# A marker class for all laptops
+parameters:
+  dollar: &dollar "$"
+  motd: "Hello ${name}"
+  motd_qutoed: "Hello ${dollar}{name}"
+  hardware:
+    class: computer
+    sub-class: laptop

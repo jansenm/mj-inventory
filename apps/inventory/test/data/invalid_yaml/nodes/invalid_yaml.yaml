@@ -1,0 +1,4 @@
+parameters:
+  a: 1
+  b: 2
+  - now a list doesnt work

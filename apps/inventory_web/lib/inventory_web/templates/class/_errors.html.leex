@@ -1,0 +1,23 @@
+<%#
+ SPDX-FileCopyrightText: 2021 Michael Jansen <info@michael-jansen.biz>
+ SPDX-License-Identifier: CC0-1.0
+%>
+<section class="container box">
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+      <ul class="is-size-3">
+        <li class="is-active"><a href="#" aria-current="page">Errors</a></li>
+      </ul>
+    </nav>
+
+    <div class="content">
+        <dl>
+        <%= for {{type, name}, errors} <- @errors do %>
+            <%= for error <- errors do %>
+            <dt><%= live_patch "#{type} #{name}", to: Routes.inventory_path(@socket, :"show_#{type}", name) %></dd>
+            <dd><%= error %></dd>
+            <% end %>
+        <% end %>
+        </dl>
+    </div>
+
+</section>

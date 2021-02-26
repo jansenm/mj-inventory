@@ -1,0 +1,4 @@
+parameters:
+  # This parameter shouldn't be available in the repo
+  motd: "You shouldn't see me"
+invalidkey:

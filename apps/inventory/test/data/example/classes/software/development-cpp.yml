@@ -1,0 +1,7 @@
+# General development stuff
+classes:
+  - "software.development"
+
+parameters:
+  packages:
+    - pattern:devel_C_C++

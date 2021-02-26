@@ -1,0 +1,12 @@
+# base class for all opensuse distributions
+parameters:
+  # distribution is loosely modelled on /etc/os-release
+  distribution:
+    id: "opensuse"
+    id_like:
+      - "suse"
+      - "opensuse"
+    bug_report_url: "https://bugs.opensuse.org"
+    home_url: "https://www.opensuse.org/"
+
+

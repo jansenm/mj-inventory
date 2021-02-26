@@ -1,0 +1,5 @@
+# Opensuse 15.2 release
+classes:
+  - distribution.opensuse.leap
+parameters:
+  version_id = "15.2"

@@ -1,0 +1,51 @@
+{
+  "applications": {},
+  "__reclass__": {
+    "timestamp": "Sun Dec 20 20:28:41 2020"
+  },
+  "classes": {
+    "motd1": [
+      "multiple_inheritance1"
+    ],
+    "motd2": [
+      "multiple_inheritance1"
+    ]
+  },
+  "nodes": {
+    "multiple_inheritance1": {
+      "environment": "base",
+      "applications": [],
+      "__reclass__": {
+        "node": "./multiple_inheritance1",
+        "environment": "base",
+        "name": "multiple_inheritance1",
+        "timestamp": "Sun Dec 20 20:28:41 2020",
+        "uri": "yaml_fs:///home/mjansen/devel/projects/inventory/test/data/reclass-compatibility/nodes/./multiple_inheritance1.yml"
+      },
+      "classes": [
+        "motd1",
+        "motd2"
+      ],
+      "parameters": {
+        "motd": "Hello from motd2",
+        "motd_expected": "hello from motd2"
+      }
+    },
+    "dollar-sign": {
+      "environment": "base",
+      "applications": [],
+      "__reclass__": {
+        "node": "./dollar-sign",
+        "environment": "base",
+        "name": "dollar-sign",
+        "timestamp": "Sun Dec 20 20:28:41 2020",
+        "uri": "yaml_fs:///home/mjansen/devel/projects/inventory/test/data/reclass-compatibility/nodes/./dollar-sign.yml"
+      },
+      "classes": [],
+      "parameters": {
+        "a": "${catalina.base}",
+        "dollar": "$"
+      }
+    }
+  }
+}

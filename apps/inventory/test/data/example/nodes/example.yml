@@ -1,0 +1,6 @@
+parameters:
+  host:
+    name: myserver
+    ip-address: 127.0.0.1
+  motd: |-
+    Welcome to ${host:name} ${host:ip-address}

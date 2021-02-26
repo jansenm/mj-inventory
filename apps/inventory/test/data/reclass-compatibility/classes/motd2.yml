@@ -1,0 +1,4 @@
+classes:
+  - motd1
+parameters:
+  motd: "Hello from motd2"

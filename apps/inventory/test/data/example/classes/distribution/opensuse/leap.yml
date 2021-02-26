@@ -1,0 +1,15 @@
+# Opensuse tumbleweed distribution
+classes:
+  - distribution.opensuse
+parameters:
+  # distribution is loosely modelled on /etc/os-release
+  distribution:
+    name: "openSUSE Leap"
+    id: "opensuse-leap"
+    id_like:
+      - "suse"
+      - "opensuse"
+    download_url: "https://software.opensuse.org/distributions/leap"
+    documentation_url: "https://en.opensuse.org/Portal:Leap"
+
+

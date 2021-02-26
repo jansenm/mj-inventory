@@ -1,0 +1,6 @@
+classes:
+  # The base class specified here is broken.
+  - "distribution.opensuse.leap.15.1"
+  - "hardware.laptop"
+parameters:
+  name: "laptop.local"

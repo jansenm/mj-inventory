@@ -1,0 +1,15 @@
+# Opensuse tumbleweed distribution
+classes:
+  - distribution.opensuse
+parameters:
+  # distribution is loosely modelled on /etc/os-release
+  distribution:
+    name: "openSUSE Tumbleweed"
+    id: "opensuse-tumbleweed"
+    id_like:
+      - "suse"
+      - "opensuse"
+    documentation_url: "https://en.opensuse.org/Portal:Tumbleweed"
+    download_url: "https://software.opensuse.org/distributions/tumbleweed"
+
+

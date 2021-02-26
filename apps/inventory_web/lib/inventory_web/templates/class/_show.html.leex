@@ -1,0 +1,141 @@
+<%#
+ SPDX-FileCopyrightText: 2021 Michael Jansen <info@michael-jansen.biz>
+ SPDX-License-Identifier: CC0-1.0
+%>
+<section class="container box">
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+      <ul class="is-size-3">
+        <%= if @type == "class" do %>
+            <li><%= live_patch "Classes", to: Routes.inventory_path(@socket, :index_classes) %></li>
+            <li class="is-active"><a href="#" aria-current="page"><%= @name %></a>
+                <%= if :invalid in @badges do %><span class="tag mr-1 is-danger is-medium">invalid</span><% end %>
+                <%= if :unused in @badges do %><span class="tag mr-1 is-info is-medium">unused</span><% end %>
+            </li>
+        <% else %>
+            <li><%= live_patch "Nodes", to: Routes.inventory_path(@socket, :index_nodes)%></li>
+            <li class="is-active"><a href="#" aria-current="page"><%= @name %></a>
+                <%= if :invalid in @badges do %><span class="mr-1 tag is-danger is-medium">invalid </span><% end %>
+                <%= if :unused in @badges do %><span class="mr-1 tag is-info is-medium">unused</span><% end %>
+            </li>
+        <% end %>
+      </ul>
+    </nav>
+
+
+    <!-- <%= if @object === nil || not @computed_values.valid? do %>
+    <p><div class="notification content is-warning">
+    The object has errors</p>
+    </div></p>
+    <% end %> -->
+
+    <%= if @object === nil do %>
+        <section class="section content">
+            <h2>Errors</h2>
+            <ol>
+            <li>The object is not defined</li>
+            </ol>
+        </section>
+
+    <% else %>
+    <nav aria-label="document">
+        <div class="tabs">
+            <ul>
+                <li class="<%= @tab == "overview" && "is-active" || "" %>"><a phx-click="show" phx-value-tab="overview">Overview</a> </li>
+                <li class="<%= @tab == "definition" && "is-active" || "" %>"><a phx-click="show" phx-value-tab="definition">Definition</a> </li>
+                <li class="<%= @tab == "ancestry" && "is-active" || "" %>"><a phx-click="show" phx-value-tab="ancestry">Computed</a> </li>
+            </ul>
+        </div>
+    </nav>
+
+    <%= case @tab do %>
+    <% "overview" -> %>
+        <section class="section content">
+
+            <h2>Errors</h2>
+            <%= if @computed_values.valid? do %>
+            <p>No errors</p>
+            <% else %>
+            <ol>
+                <%= for error <- @computed_values.errors do %>
+                <li><%= error %></li>
+                <% end %>
+            </ol>
+            <% end %>
+
+            <h2>Base Classes</h2>
+            <ol>
+                <%= for class <- @object.classes do %>
+                <li><%= live_patch class, to: Routes.inventory_path(@socket, :show_class, class) %></li>
+                <% end %>
+            </ol>
+
+            <h2>Applications</h2>
+            <ol>
+                <%= for app <- @object.applications do %>
+                <li><%= app %></li>
+                <% end %>
+            </ol>
+
+            <h2>Environment</h2>
+            <p><%= @object.environment %></p>
+
+            <h2>Parameters</h2>
+            <pre>
+                <%= parameters(@object.parameters) %>
+            </pre>
+        </section>
+
+    <% "definition" -> %>
+        <section class="section content">
+            <pre> <%= @object.source %> </pre>
+        </section>
+
+    <% "ancestry" -> %>
+        <section class="section content">
+            <h2 class="is-invisible" class="is-4">Computed</h2>
+            <div class="columns" x-data="{ select: '<%= @name %>' }">
+            <div class="column is-3">
+                <ol>
+                    <%= for {:ok, object} <- @inheritance_values do %>
+                    <li><a x-bind:class="{'has-text-primary': select == '<%=object.name%>'}" @click="select = '<%= object.name %>'"><%= object.name %></a></li>
+                    <% end %>
+                    <li><a x-bind:class="{'has-text-primary': select == '<%=@name%>-interpolated'}" @click="select = '<%=@name%>-interpolated'"><%= @name %> (interpolated)</a></li>
+                </ol>
+            </div>
+            <div class="column">
+                    <%= for {:ok, object} <- @inheritance_values do %>
+                        <div x-show="select == '<%= object.name %>'">
+                        <%= if object.valid? do %>
+                            <pre>
+                            <%= parameters(object.parameters) %> </li>
+                            </pre>
+                        <% else %>
+                            <b>The object is invalid</b>
+                            <ul><%= for error <- object.errors do %>
+                            <li><%= error %></li>
+                            <% end %></ul>
+                        <% end %>
+                        </div>
+                    <% end %>
+                    <div x-show="select == '<%= @name %>-interpolated'">
+                    <%= if @computed_values.valid? do %>
+                        <pre>
+                        <%= parameters(@computed_values.parameters) %> </li>
+                        </pre>
+                    <% else %>
+                        <b>The object is invalid</b>
+                        <ul><%= for error <- @computed_values.errors do %>
+                        <li><%= error %></li>
+                        <% end %></ul>
+                    <% end %>
+                    </div>
+            </div>
+        </section>
+
+    <% _ -> %>
+        unhandled <%= @tab %>
+    <% end %>
+
+    <% end %>
+
+</section>
