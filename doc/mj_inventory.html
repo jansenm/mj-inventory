@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>MJ Inventory</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/reset.min.css"
+          integrity="sha512-Mjxkx+r7O/OLQeKeIBCQ2yspG1P5muhAtv/J+p2/aPnSenciZWm5Wlnt+NOUNA4SHbnBIE/R2ic0ZBiCXdQNUg=="
+          crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/reveal.min.css"
+          integrity="sha512-zu0eodDPCBAZf1vnIgwZ6qchMBt1xqgGkS9vBjVmunoH8pU7cc9OQKBiSQCclpvqySupy9Y1pLZc87VB40G4Sw=="
+          crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/theme/night.min.css"
+          integrity="sha512-kUvEY90IMFRvVVJhTFb0Ad49g0zu+7mNFwDmy4SKoOQNfJVU5KSvmly0vlrFVuo+yr4UqQ9fWSP2h3q4eCx7hw=="
+          crossorigin="anonymous"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/plugin/highlight/monokai.min.css"
+          integrity="sha512-z8wQkuDRFwCBfoj7KOiu1MECaRVoXx6rZQWL21x0BsVVH7JkqCp1Otf39qve6CrCycOOL5o9vgfII5Smds23rg=="
+          crossorigin="anonymous"/>
+
+    <style type="text/css">
+        body, p, li, pre, code, code.plaintext {
+            font-size: 20px;
+        }
+
+        .info {
+            font-size: large;
+            padding: 1em;
+            text-align: left;
+        }
+
+        .flex {
+            display: flex
+        }
+
+        .fc-1 {
+            flex: 0 1 auto;
+        }
+
+        .fc-2 {
+            flex: 1 0 50%;
+        }
+
+        .fc-4-4 {
+            flex: 1 0 25%;
+        }
+
+        .fc-ns {
+            flex: 2 0 60%;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="reveal">
+    <div class="slides">
+
+        <!-- ### REPOSITORY -->
+        <section>
+
+            <!-- ### REPOSITORY -->
+            <section>
+                <h2>Repository</h2>
+                <pre><code class="plaintext" data-noescape data-trim>
+example/
+├── classes
+│   ├── distribution
+│   │   ├── opensuse
+│   │   │   ├── leap
+│   │   │   │   ├── 15.1.yml
+│   │   │   ├── leap.yml
+│   │   │   └── tumbleweed.yml
+│   │   └── opensuse.yml
+│   └── &hellip;
+└── nodes
+    ├── laptop.yml
+    └── &hellip;</code></pre>
+            </section>
+
+            <!-- ### REPOSITORY / CLASSES -->
+            <section>
+                <h2>Classes</h2>
+                <pre><code class="plaintext" data-line-numbers="2" data-noescape data-trim>
+example/
+├── <mark>classes</mark>
+│   ├── distribution
+│   │   ├── opensuse
+│   │   │   ├── leap
+│   │   │   │   ├── 15.1.yml
+│   │   │   ├── leap.yml
+│   │   │   └── tumbleweed.yml
+│   │   └── opensuse.yml
+│   └── &hellip;
+└── nodes
+    ├── laptop.yml
+    └── &hellip;</code></pre>
+            </section>
+
+            <!-- ### REPOSITORY / CLASS / NAMING -->
+            <section>
+                <h2>Class Naming</h2>
+                <p>The name of a class is derived from its filesystem path. Slashes become dots.</p>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Path</th>
+                        <th>Name</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>classes/distribution/opensuse.yml</td>
+                        <td>distribution.opensuse</td>
+                    </tr>
+                    <tr>
+                        <td>classes/domain/michael-jansen.biz.yml</td>
+                        <td>domain.michael-jansen.biz</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </section>
+
+            <!-- ### REPOSITORY / NODE -->
+            <section>
+                <h2>Nodes</h2>
+                <pre><code class="plaintext" data-line-numbers="11-14" data-noescape data-trim>
+example/
+├── classes
+│   ├── distribution
+│   │   ├── opensuse
+│   │   │   ├── leap
+│   │   │   │   ├── 15.1.yml
+│   │   │   ├── leap.yml
+│   │   │   └── tumbleweed.yml
+│   │   └── opensuse.yml
+│   └── &hellip;
+└── <mark>nodes</mark>
+    ├── laptop.yml
+    └── &hellip;</code></pre>
+            </section>
+
+            <!-- ### REPOSITORY / NODE / NAMING -->
+            <section>
+                <h2>Node Naming</h2>
+                <p>The name of a node is derived from its filename only.</p>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Path</th>
+                        <th>Name</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>nodes/hosts/example.com.yml</td>
+                        <td>example.com</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+
+        </section>
+
+
+        <!-- ### NODE -->
+        <section data-auto-animate>
+
+            <!-- ### NODE / OVERVIEW -->
+            <section data-auto-animate>
+                <h2>Node</h2>
+                <div class="flex">
+                    <div class="fc-ns">
+                       <pre><code class="yaml" data-line-numbers data-trim data-noescape>
+---
+<mark>classes</mark>:
+    - distribution.opensuse
+<mark>applications</mark>:
+    - digikam
+    - development-c++
+<mark>environment</mark>: "private"
+<mark>parameters</mark>:
+    accounts:
+        mjansen:
+            fullname: Michael Jansen
+            root: yes</code></pre>
+                    </div>
+                    <div class="fc-1 info">
+                        <p> A node can specify the following attributes</p>
+                        <ul>
+                            <li><b>classes</b> to inherit from.</li>
+                            <li><b>applications</b> to apply to the node.</li>
+                            <li><b>environment</b> this node belongs to.</li>
+                            <li><b>parameters</b> to apply to this node.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ### NODE / CLASSES -->
+            <section data-auto-animate>
+                <h2>Node / Classes</h2>
+                <div class="flex">
+                    <div class="fc-ns">
+                       <pre><code class="yaml" data-line-numbers="1-2" data-trim data-noescape>
+---
+<mark>classes</mark>:
+    - distribution.opensuse
+applications:
+    - digikam
+    - development-c++
+environment: "private"
+parameters:
+    accounts:
+        mjansen:
+            fullname: Michael Jansen
+            root: yes</code></pre>
+                    </div>
+                    <div class="fc-1 info">
+                        <p><b>classes</b> are a concept to extract common node configuration into base classes for
+                            configuration reuse.</p>
+                        <p><b>inheritance</b> is well defined.</p>
+                        <p><b>interpolation</b> can be used to delegate configuration to nodes or child classes.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ### NODE / APPLICATIONS -->
+            <section data-auto-animate>
+                <h2>Node / Applications</h2>
+                <div class="flex">
+                    <div class="fc-ns">
+                       <pre><code class="yaml" data-line-numbers="4-6" data-trim data-noescape>
+---
+classes:
+    - distribution.opensuse
+<mark>applications</mark>:
+    - digikam
+    - development-c++
+environment: "private"
+parameters:
+    accounts:
+        mjansen:
+            fullname: Michael Jansen
+            root: yes</code></pre>
+                    </div>
+                    <div class="fc-1 info">
+                        <p><b>applications</b> is a set of behaviours to apply to the node.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ### NODE / ENVIRONMENT -->
+            <section data-auto-animate>
+                <h2>Node / Environment</h2>
+                <div class="flex">
+                    <div class="fc-ns">
+                       <pre><code class="yaml" data-line-numbers="7" data-trim data-noescape>
+---
+classes:
+    - distribution.opensuse
+applications:
+    - digikam
+    - development-c++
+<mark>environment</mark>: "private"
+parameters:
+    accounts:
+        mjansen:
+            fullname: Michael Jansen
+            root: yes</code></pre>
+                    </div>
+                    <div class="fc-1 info">
+                        <p><b>environment</b> is the name of the environment this node belongs to.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ### NODE / PARAMETERS -->
+            <section data-auto-animate>
+                <h2>Node / Parameters</h2>
+                <div class="flex">
+                    <div class="fc-ns">
+                       <pre><code class="yaml" data-line-numbers="8-12" data-trim data-noescape>
+---
+classes:
+    - distribution.opensuse
+applications:
+    - digikam
+    - development-c++
+environment: "private"
+<mark>parameters</mark>:
+    accounts:
+        mjansen:
+            fullname: Michael Jansen
+            root: yes</code></pre>
+                    </div>
+                    <div class="fc-1 info">
+                        <p><b>parameters</b> is a freeform field you can use to specify whatever you want.</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- ### CLASS -->
+        <section><h2>Class</h2>
+            <div class="flex">
+                <div class="fc-ns">
+                    <pre><code class="yaml" data-line-numbers data-trim>
+---
+classes:
+- distribution.opensuse.tumbleweed
+- pc.laptop
+applications:
+- kde
+- libre-office
+environment: private
+parameters:
+  motd: Have a nice day</code></pre>
+                </div>
+                <div class="fc-1 info">
+                    <p><b>classes</b> can have the exact same attributes as nodes.</p>
+                    <p><b>classes</b> represent abstract concepts you can apply to nodes by inheritance.</p>
+                    <p><b>classes</b> can be used to query the repository for all nodes inheriting them.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ### INHERITANCE -->
+        <section>
+
+            <!-- ### INHERITANCE / OVERVIEW -->
+            <section><h2>Inheritance</h2>
+                <p>Nodes and classes can inherit from classes. The configuration of the child will be merged into the
+                    configuration of the base class following a clear set of rules leading to reproducible and
+                    predictable results.</p>
+                <p>First the inheritance chain is determined.</p>
+                <p>Then the configuration is merged left to right following the inheritance chain.</p>
+                <p>On the resulting configuration interpolation is applied.</p>
+            </section>
+
+            <!-- ### INHERITANCE / CHAIN -->
+            <section><h2>Inheritance Chain</h2>
+                <div class="flex">
+                    <div class="fc-4-4">
+                        <pre><code data-trim class="yaml" data-noescape>
+                            # <b>classA</b>
+                            classes:
+                        </code></pre>
+                    </div>
+                    <div class="fc-4-4">
+                        <pre><code data-trim class="yaml" data-noescape>
+                            # <b>classB</b>
+                            classes:
+                                - classA
+                        </code></pre>
+                    </div>
+                    <div class="fc-4-4">
+                        <pre><code data-trim class="yaml" data-noescape>
+                            # <b>classC</b>
+                            classes:
+                                - classB
+                                - classA
+                        </code></pre>
+                    </div>
+                    <div class="fc-4-4">
+                        <pre><code data-trim class="yaml" data-noescape>
+                            # <b>nodeA</b>
+                            classes:
+                                - classC
+                                - classA
+                        </code></pre>
+                    </div>
+                </div>
+                <p class="fragment">The inheritance chain is determined by following the base classes depth first top to
+                    bottom.</p>
+                <p class="fragment">classA -> classB -> classA -> classC -> classA -> nodeA</p>
+                <p class="fragment">If a class appears more than once in the chain all but the first appearance are
+                    removed.</p>
+                <p class="fragment">classA -> classB -> classC -> nodeA</p>
+            </section>
+
+            <!-- ### INHERITANCE / MERGING -->
+            <section><h2>Merging / Scalars</h2>
+                <div class="flex">
+                    <div class="fc-2">
+                        <pre><code data-trim class="yaml" data-noescape>
+                            # <b>classA</b>
+                            parameters:
+                                "a scalar": "Hello World"
+                        </code></pre>
+                    </div>
+                    <div class="fc-2">
+                        <pre><code data-trim class="yaml" data-noescape>
+                            # <b>NodeA</b>
+                            classes:
+                                - classA
+                            parameters:
+                                "a scalar": 1
+                        </code></pre>
+                    </div>
+                </div>
+                <p>Scalars are overwritten. The Result is:</p>
+                <pre><code data-trim class="yaml" data-noescape>
+                parameters:
+                    "a scalar": 1
+                </code></pre>
+            </section>
+
+            <section><h2>Merging / Lists</h2>
+                <div class="flex">
+                    <div class="fc-2">
+                        <pre><code data-trim class="yaml" data-noescape>
+                            # <b>classA</b>
+                            parameters:
+                            "a list":
+                                - A
+                        </code></pre>
+                    </div>
+                    <div class="fc-2">
+                        <pre><code data-trim class="yaml" data-noescape>
+                            # <b>NodeA</b>
+                            classes:
+                                - classA
+                            parameters:
+                                "a list":
+                                    - B
+                        </code></pre>
+                    </div>
+                </div>
+                <p>Lists are appended.</p>
+                <pre><code data-trim class="yaml" data-noescape>
+                parameters:
+                    "a list":
+                        - A
+                        - B
+                </code></pre>
+            </section>
+
+            <section><h2>Merging / Maps</h2>
+                <div class="flex">
+                    <div class="fc-2">
+                        <pre><code data-trim class="yaml" data-noescape>
+                            # <b>classA</b>
+                            parameters:
+                            "a map":
+                                a: 1
+                                b: 2
+                        </code></pre>
+                    </div>
+                    <div class="fc-2">
+                        <pre><code data-trim class="yaml" data-noescape>
+                            # <b>NodeA</b>
+                            classes:
+                                - classA
+                            parameters:
+                                "a map":
+                                    b: 3
+                                    c: 4
+                        </code></pre>
+                    </div>
+                </div>
+                <p>Maps are merged. We make NO GUARANTEES about the order in maps.</p>
+                <pre><code data-trim class="yaml" data-noescape>
+                parameters:
+                    "a map":
+                        b: 3
+                        c: 4
+                        a: 1
+                </code></pre>
+            </section>
+
+            <section><h2>Merging / Overwriting</h2>
+                <div class="flex">
+                    <div class="fc-2">
+                        <pre><code data-trim class="yaml" data-noescape>
+                            # <b>classA</b>
+                            parameters:
+                                "a map":
+                                    a: 1
+                                "a list":
+                                    - A
+                        </code></pre>
+                    </div>
+                    <div class="fc-2">
+                        <pre><code data-trim class="yaml" data-noescape>
+                            # <b>NodeA</b>
+                            classes:
+                                - classA
+                            parameters:
+                                "~a list":
+                                    - B
+                                "~a map":
+                                    b: 2
+                        </code></pre>
+                    </div>
+                </div>
+                <p>It is also possible to overwrite lists and maps instead of merging. Just prefix the attribute name
+                    with a tilde.</p>
+                <pre><code data-trim class="yaml" data-noescape>
+                parameters:
+                    "a list":
+                        - B
+                    "a map":
+                        b: 2
+                </code></pre>
+            </section>
+
+            <section><h2>Interpolation</h2>
+                <div class="flex">
+                    <div class="fc-2">
+                            <pre><code data-trim class="yaml" data-noescape>
+                                # <b>domain.example.com</b>
+                                parameters:
+                                  host:
+                                    domain: example.com
+                                    fqdn: >
+                                      $(host:name).(host:domain)
+                            </code></pre>
+                    </div>
+                    <div class="fc-2">
+                            <pre><code data-trim class="yaml" data-noescape>
+                                # <b>host</b>
+                                classes:
+                                  - domain.example.com
+                                parameters:
+                                  host:
+                                    name: host
+                            </code></pre>
+                    </div>
+                </div>
+                <p>Interpolation is done AFTER merging the configuration. Thats why the <i>domain.example.com</i> class
+                    can
+                    reference a parameter set by the node.</p>
+                <pre><code data-trim class="yaml" data-noescape>
+                    parameters:
+                        host:
+                           domain: example.com
+                           fqdn: host.example.com
+                           host: host
+                    </code></pre>
+            </section>
+        </section>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/reveal.js"
+        integrity="sha512-LGXpHNR8kKb3liBoiowLefRfx9BahbZ0FWE8vfTOV3vU4jD/9SpoyZQ49rc7gBwSzbFTZAaLCsSkpujb6ic+Og=="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/plugin/highlight/highlight.min.js"
+        integrity="sha512-NA5UCab7xDKQPXGsmIp8iEuId5BAKGPiqHZsZQcBuySfp1n3dZrwBDKpPNL23Db5upay1nULxU14JV1ggFOD2A=="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/plugin/notes/notes.min.js"
+        integrity="sha512-FYeeQscKqibmYKr0+nE2+fN5prBsFwgjsBVwkrA88O6mN2+ai6EvRkSi6txuhXlWsyK1MUfoV+94+q6HLouJSQ=="
+        crossorigin="anonymous"></script>
+
+<script>
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealHighlight, RevealNotes]
+    });
+</script>
+</body>
+</html>
