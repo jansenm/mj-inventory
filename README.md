@@ -8,8 +8,8 @@ replace the build-in inventory of ansible or as an external node classifier(enc)
 It is also possible to use it for completely different purposes. For example to hold the configuration of a Jenkins
 Job-DSL Job to generate 100s of Jobs automatically.
 
-This software is heavily inspired by [reclass] because that is what I currently use. In future i will extend the functionality
-but will always provide a reclass compatibility mode.
+This software is heavily inspired by [reclass] because that is what I currently use. In future i will extend the
+functionality but will always provide a reclass compatibility mode.
 
 ## Concepts
 
@@ -33,8 +33,8 @@ Something like
 
 ### Repository
 
-A repository is one unit of configuration that can contain many classes and nodes. Currently, the only implemented option
-is file based repositories but there are ideas and plans to implement database backed repositories.
+A repository is one unit of configuration that can contain many classes and nodes. Currently, the only implemented
+option is file based repositories but there are ideas and plans to implement database backed repositories.
 
 The repository is a directory containing two other directories.
 
@@ -44,7 +44,7 @@ classes/
 nodes/
 ```
 
-### Inheritance 
+### Inheritance
 
 Nodes and classes can inherit from classes. The configuration of the child will be merged into the configuration of the
 base class following a clear set of rules leading to reproducible and predictable results.
@@ -57,7 +57,7 @@ the objects are merged left to right.
 ### Interpolation
 
 After the inheritance chain was determined, and the configurations successfully merged in a last step interpolation will
-be done. Interpolation allows cross-referencing configuration values to avoid duplication. 
+be done. Interpolation allows cross-referencing configuration values to avoid duplication.
 
 ```yaml
 parameters:
@@ -92,7 +92,7 @@ back from the resulting name.
 | ---- | ---- |
 | $REPO/nodes/host/michael-jansen.biz.yml | michael-jansen.biz |
 
-The namespaces of nodes and classes are distinct. It is possible to have a node and  class with the same name.
+The namespaces of nodes and classes are distinct. It is possible to have a node and class with the same name.
 
 ### Inheritance Chain
 
@@ -157,7 +157,7 @@ parameters:
     - C
 ```
 
-Merging the list in the order of the inheritance chain leads to the results of
+Merging the lists in the order of the inheritance chain leads to the results of
 
 ```yaml
 # node nodeA
@@ -196,7 +196,7 @@ parameters:
     c: 3
 ```
 
-Merging the list in the order of the inheritance chain leads to the results of
+Merging the maps in the order of the inheritance chain leads to the results of
 
 ```yaml
 # node nodeA
@@ -226,7 +226,7 @@ parameters:
   map: "A map"
 ```
 
-Merging the list in the order of the inheritance chain leads to the results of
+Merging the values in the order of the inheritance chain leads to the results of
 
 ```yaml
 # node nodeA
@@ -254,7 +254,7 @@ parameters:
     - C
 ```
 
-Merging the list in the order of the inheritance chain leads to the results of
+Merging the lists in the order of the inheritance chain leads to the results of
 
 ```yaml
 # node nodeA
@@ -296,17 +296,16 @@ mix test
 
 ```
 
-
 ### Using the project
-There are currently two usages implemented in mj inventory. The implementation aims currently to be 100% reclass compatible
-making is possible to continue using reclass and just use the graphical interface for enhanced insight into the
-inventory.
 
+There are currently two usages implemented in mj inventory. The implementation aims currently to be 100% reclass
+compatible making is possible to continue using reclass and just use the graphical interface for enhanced insight into
+the inventory.
 
 ### Graphical User Interface
 
-The graphical interface gives some insight into the repo. It shows the inheritance chain and all intermediate states of it,
-the values before and after interpolation plus all encountered errors.
+The graphical interface gives some insight into the repo. It shows the inheritance chain and all intermediate states of
+it, the values before and after interpolation plus all encountered errors.
 
 ```shell
 # Start the phoenix app with a given repository
@@ -315,7 +314,7 @@ REPOSITORY=/path/to/repo mix phx.server
 
 ### Command line
 
-To build the binary(escript). 
+To build the binary(escript).
 
 ```shell
 cd apps/inventory && mix escript.build
@@ -332,12 +331,16 @@ And to use it:
 ./inventory --host <HOST> ~$INVENTORY_PATH
 ```
 
-**WARNING**: The cli part is the most fragile right now. Needs some love.
+<table>
+  <tr>
+    <th>:exclamation:</th>
+    <td>The cli part is the most fragile right now. Needs some love.</td>
+  </tr>
+</table>
 
 # Licensing
 
     SPDX-FileCopyrightText: 2021 Michael Jansen <info@michael-jansen.biz>
     SPDX-License-Identifier:  AGPL-3.0-or-later
-
 
 [reclass]: https://reclass.pantsfullofunix.net/
