@@ -1,5 +1,7 @@
 # MJ Inventory
 
+![CI](https://github.com/jansenm/mj-inventory/actions/workflows/ci.yml/badge.svg)
+
 MJ Inventory is a lightweight configuration management database (cmdb) implementation. One of its main use cases is to
 replace the build-in inventory of ansible or as an external node classifier(enc) in puppet.
 
