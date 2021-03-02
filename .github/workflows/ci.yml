@@ -4,43 +4,69 @@ on: push
 
 jobs:
   test:
+    name: OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}} / NodeJS ${{matrix.nodejs}}
+
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        otp: [ '23.2.1' ]
+        elixir: [ '1.11.2' ]
+        nodejs: [ '12.x' ]
+
     steps:
 
       #
       ### CHECKOUT
-      - uses: actions/checkout@v2
+      - name: Checkout Sources
+        uses: actions/checkout@v2
 
       #
       ### SETUP VERSIONS
-      - uses: actions/setup-elixir@v1.0.0
+      - name: Setup Elixir
+        uses: actions/setup-elixir@v1.0.0
         with:
-          otp-version: 23.2.1
-          elixir-version: 1.11.2
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
 
-      - uses: actions/setup-node@v1
+      - name: Setup NodeJS
+        uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: ${{matrix.nodejs}}
 
       #
       ### SETUP/CACHE DEPENDENCIES
-      - uses: actions/cache@v1
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        id: deps-cache
         with:
-          path: deps
-          key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          path: |
+              deps/
+              _build/dev/dialyxir*.plt
+              _build/dev/dialyxir*.plt.hash
+          key: ${{ runner.os }}-${{ matrix.otp}}-${{matrix.elixir}}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
       - run: mix local.rebar --force
+        if: steps.deps-cache.outputs.cache-hit != 'true'
       - run: mix local.hex --force
+        if: steps.deps-cache.outputs.cache-hit != 'true'
       - run: mix deps.get
+        if: steps.deps-cache.outputs.cache-hit != 'true'
       - run: mix deps.compile
+        if: steps.deps-cache.outputs.cache-hit != 'true'
 
       #
       ### SETUP/CACHE NODE STUFF
-      - uses: actions/cache@v1
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        id: node_modules-cache
         with:
           path: apps/inventory_web/assets/node_modules
           key: ${{ runner.os }}-node_modules-${{ hashFiles(format('{0}{1}', github.workspace, '/apps/inventory_web/assets/package-lock.json')) }}
       - run: npm install --prefix assets
+        if: steps.node_modules-cache.outputs.cache-hit != 'true'
         working-directory: apps/inventory_web
+
+      #
+      ### BUILD OUR NPM STUFF
       - run: npm run deploy --prefix assets
         working-directory: apps/inventory_web
       - run: mix phx.digest
@@ -50,7 +76,8 @@ jobs:
       ### BUILD
       - run: mix compile
       - run: mix docs
-      - run: |
+      - name: Run mix credo
+        run: |
           mix credo || (
           rc=$?
 
@@ -77,17 +104,9 @@ jobs:
 
       #
       ### DIALYZER
-      - name: Retrieve PLT Cache
-        uses: actions/cache@v1
-        id: plt-cache
-        with:
-          path: '_build/dev/dialyxir*'
-          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-
-      - name: Create PLTs
-        if: steps.plt-cache.outputs.cache-hit != 'true'
+      # we cached this as part of the dependencies above
+      - if: steps.deps-cache.outputs.cache-hit != 'true'
         run: |
           mix dialyzer --plt
 
-      - name: Run dialyzer
-        run: mix dialyzer --no-check --halt-exit-status
+      - run: mix dialyzer --no-check --halt-exit-status
