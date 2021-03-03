@@ -338,6 +338,17 @@ And to use it:
   </tr>
 </table>
 
+# Reclass compatibility
+
+Compatibility with reclass is a core feature. Known issues right now are:
+
+[Wildcard/Regexp Mappings](https://reclass.pantsfullofunix.net/operations.html#wildcard-regexp-mappings) aren't
+supported currently. I do not use this feature myself and its not really specified how it is supposed to work. How will
+the classes be applied to the matching nodes? Appended? Prepended? What if a node matches multiple regexes. What is the
+order?
+
+If someone really needs it please open a bug reports. I might look into it if there is enough interest.
+
 # Licensing
 
     SPDX-FileCopyrightText: 2021 Michael Jansen <info@michael-jansen.biz>
