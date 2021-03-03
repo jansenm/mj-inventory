@@ -299,13 +299,13 @@ mix test
 ### Using the project
 
 There are currently two usages implemented in mj inventory. The implementation aims currently to be 100% reclass
-compatible making is possible to continue using reclass and just use the graphical interface for enhanced insight into
+compatible making it possible to continue using reclass and just use the graphical interface for enhanced insight into
 the inventory.
 
 ### Graphical User Interface
 
-The graphical interface gives some insight into the repo. It shows the inheritance chain and all intermediate states of
-it, the values before and after interpolation plus all encountered errors.
+The graphical user interface gives some insight into the repo. It shows the inheritance chain and all intermediate
+states of it, the values before and after interpolation plus all encountered errors.
 
 ```shell
 # Start the phoenix app with a given repository
