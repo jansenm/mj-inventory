@@ -23,7 +23,8 @@ jobs:
       #
       ### SETUP VERSIONS
       - name: Setup Elixir
-        uses: actions/setup-elixir@v1.0.0
+        # https://github.com/erlef/setup-elixir
+        uses: erlef/setup-elixir@v1.0.0
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
