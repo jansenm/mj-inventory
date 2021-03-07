@@ -7,3 +7,24 @@
 p > p.level {
   padding-left: 3cm
 }
+
+dl.table {
+  display: flex;
+  flex-flow: row wrap;
+
+  dt {
+    flex-basis: 20%;
+    background: whitesmoke;
+    color: #4a4a4a;
+    text-align: right;
+    padding: 2px 4px;
+    font-weight: bold;
+  }
+
+  dd {
+    flex-basis: 70%;
+    flex-grow: 1;
+    padding: 2px 4px 10px 2px;
+    margin-left: 4px;
+  }
+}

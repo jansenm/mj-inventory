@@ -24,18 +24,12 @@
     </nav>
 
 
-    <!-- <%= if @object === nil || not @computed_values.valid? do %>
-    <p><div class="notification content is-warning">
-    The object has errors</p>
-    </div></p>
-    <% end %> -->
-
     <%= if @object === nil do %>
     <section class="section content">
-        <h2>Errors</h2>
-        <ol>
-            <li>The object is not defined</li>
-        </ol>
+        <dl>
+            <dd>Errors</dd>
+            <dt>The object is not defined</dt>
+        </dl>
     </section>
 
     <% else %>
@@ -56,44 +50,56 @@
     <%= case @tab do %>
     <% "overview" -> %>
     <section class="section content">
-
-        <h2>Errors</h2>
-        <%= if @computed_values.valid? do %>
-        <p>The object is valid</p>
-        <% else %>
-        <p>The object has errors</p>
-        <% end %>
-        <ol>
-            <%= for msg <- @computed_values.messages do %>
-            <li><%= msg.severity %> - <%= msg.message %></li>
+        <h2 class="is-invisible" class="is-4">Overview</h2>
+        <dl class="table">
+            <dt>Errors</dt>
+            <%= if @computed_values.valid? do %>
+            <dd>no errors</dd>
+            <% else %>
+            <dd>
+                <ul class="mt-0">
+                    <%= for msg <- @computed_values.messages do %>
+                    <li><%= msg.severity %> - <%= msg.message %></li>
+                    <% end %>
+                </ul>
+            </dd>
             <% end %>
-        </ol>
 
-        <h2>Base Classes</h2>
-        <ol>
-            <%= for class <- @object.classes do %>
-            <li><%= live_patch class, to: Routes.inventory_path(@socket, :show_class, class) %></li>
+            <dt>Base Classes</dt>
+            <dd>
+                <ol class="mt-0">
+                    <%= for class <- @object.classes do %>
+                    <li><%= live_patch class, to: Routes.inventory_path(@socket, :show_class, class) %></li>
+                    <% end %>
+                </ol>
+            </dd>
+
+            <dt>Applications</dt>
+            <%= if @object.applications == [] do %>
+            <dd>no applications</dd>
+            <% else %>
+            <dd>
+                <ol>
+                    <%= for app <- @object.applications do %>
+                    <li><%= app %></li>
+                    <% end %>
+                </ol>
+            </dd>
             <% end %>
-        </ol>
 
-        <h2>Applications</h2>
-        <ol>
-            <%= for app <- @object.applications do %>
-            <li><%= app %></li>
+            <dt>Environment</dt>
+            <%= if @object.environment == "" do %>
+            <dd>no environment</dd>
+            <% else %>
+            <dd><%= @object.environment %><%= inspect @object.environment %></dd>
             <% end %>
-        </ol>
 
-        <h2>Environment</h2>
-        <p><%= @object.environment %></p>
-
-        <h2>Parameters</h2>
-        <pre>
-                <%= parameters(@object.parameters) %>
-            </pre>
+        </dl>
     </section>
 
     <% "definition" -> %>
     <section class="section content">
+        <h2 class="is-invisible" class="is-4">Definition</h2>
         <pre> <%= @object.source %> </pre>
     </section>
 

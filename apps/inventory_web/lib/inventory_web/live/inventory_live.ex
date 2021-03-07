@@ -49,7 +49,7 @@ defmodule MJ.InventoryWeb.InventoryLive do
             inheritance_values: inheritance_values,
             name: class.name,
             object: class,
-            tab: "definition",
+            tab: "overview",
             type: "class",
             page_title: "class #{class.name}"
           )
@@ -64,7 +64,7 @@ defmodule MJ.InventoryWeb.InventoryLive do
             inheritance_values: nil,
             name: params["name"],
             object: nil,
-            tab: "definition",
+            tab: "overview",
             type: "class",
             page_title: "class #{params["name"]}"
           )
@@ -90,7 +90,7 @@ defmodule MJ.InventoryWeb.InventoryLive do
             inheritance_values: inheritance_values,
             name: params["name"],
             object: node,
-            tab: "definition",
+            tab: "overview",
             type: "node",
             page_title: "node #{node.name}"
           )
@@ -105,7 +105,7 @@ defmodule MJ.InventoryWeb.InventoryLive do
             inheritance_values: nil,
             name: params["name"],
             object: nil,
-            tab: "definition",
+            tab: "overview",
             title: "Node #{params["name"]}",
             type: "node",
             page_title: "node #{params["name"]}"
