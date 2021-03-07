@@ -22,6 +22,8 @@ defmodule MJ.Inventory.Types.Common do
   Shared code between Nodes and Classes
   """
 
+  alias MJ.Inventory.Types.Message
+
   defmacro __using__(_opts) do
     quote do
       import MJ.Inventory.Types.Common
@@ -34,7 +36,7 @@ defmodule MJ.Inventory.Types.Common do
         environment: "",
         classes: [],
         valid?: true,
-        errors: [],
+        messages: [],
         source: nil,
         source_ref: nil
       ]
@@ -49,7 +51,7 @@ defmodule MJ.Inventory.Types.Common do
                    environment: String.t(),
                    # error handling
                    valid?: boolean(),
-                   errors: list(String.t()),
+                   messages: list(Message.t()),
                    # source reference.
                    source: String.t(),
                    source_ref: repository() | nil,
@@ -82,7 +84,7 @@ defmodule MJ.Inventory.Types.Common do
                                                 name: name,
                                                 source_ref: source_ref,
                                                 valid?: false,
-                                                errors: ["parsing error:applications is not a list" | acc.errors]
+                                                messages: [Message.error("parsing error:applications is not a list") | acc.messages]
                                               }
                                             }
             {"classes", nil}, acc -> {:cont, %{acc | classes: []}}
@@ -98,7 +100,7 @@ defmodule MJ.Inventory.Types.Common do
                   source_ref: source_ref,
                   valid?: false,
                   parameters: nil,
-                  errors: ["parsing error:unknown section »#{key}«" | acc.errors]
+                  messages: [Message.error("parsing error:unknown section »#{key}«") | acc.messages]
                 }
               }
           end

@@ -32,25 +32,24 @@ defmodule MJ.Inventory.MergeTest do
 
 
   test "lists won't work" do
-    assert_raise FunctionClauseError, fn -> Merge.deep_merge(
-                                              [1, 2, 3],
-                                              [4, 5, 6]
-                                            )
-    end
+    assert Merge.deep_merge(
+             [1, 2, 3],
+             [4, 5, 6]
+           ) == {[1, 2, 3, 4, 5, 6], []}
   end
 
   test "merge additional key -> values into left" do
     assert Merge.deep_merge(
              %{a: 1, b: 2},
              %{c: 3}
-           ) == %{a: 1, b: 2, c: 3}
+           ) == {%{a: 1, b: 2, c: 3}, []}
   end
 
   test "overwrite values for non sequential types" do
     assert Merge.deep_merge(
              %{a: 1, b: 2},
              %{a: 3}
-           ) == %{a: 3, b: 2}
+           ) == {%{a: 3, b: 2}, []}
   end
 
   test "merge nested maps" do
@@ -65,15 +64,18 @@ defmodule MJ.Inventory.MergeTest do
                  ab: 2
                }
              }
-           ) == %{
-             a: %{
-               aa: 1,
-               ab: 2
-             }
+           ) == {
+             %{
+               a: %{
+                 aa: 1,
+                 ab: 2
+               }
+             },
+             []
            }
   end
 
-  test "explicitely overwrite nested maps" do
+  test "explicitly overwrite nested maps" do
     assert Merge.deep_merge(
              %{
                "a" => %{
@@ -85,10 +87,13 @@ defmodule MJ.Inventory.MergeTest do
                  ab: 2
                }
              }
-           ) == %{
-             "a" => %{
-               ab: 2
-             }
+           ) == {
+             %{
+               "a" => %{
+                 ab: 2
+               }
+             },
+             []
            }
   end
 
@@ -97,14 +102,14 @@ defmodule MJ.Inventory.MergeTest do
     assert Merge.deep_merge(
              %{a: [1, 2, 3]},
              %{a: [4, 5, 6]}
-           ) == %{a: [1, 2, 3, 4, 5, 6]}
+           ) == {%{a: [1, 2, 3, 4, 5, 6]}, []}
   end
 
   test "overwrite lists" do
     assert Merge.deep_merge(
              %{"a" => [1, 2, 3]},
              %{"~a" => [4, 5, 6]}
-           ) == %{"a" => [4, 5, 6]}
+           ) == {%{"a" => [4, 5, 6]}, []}
   end
 
 end

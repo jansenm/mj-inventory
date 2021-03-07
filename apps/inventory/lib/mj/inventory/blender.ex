@@ -31,6 +31,7 @@ defmodule MJ.Inventory.Blender do
 
   alias MJ.Inventory.Types.{Class, Node}
   alias MJ.Inventory.Blender.Merge
+  alias MJ.Inventory.Types.Message
 
   @type t :: %Node{} | %Class{}
 
@@ -43,7 +44,7 @@ defmodule MJ.Inventory.Blender do
         applications: nil,
         parameters: nil,
         valid?: false,
-        errors: right.errors
+        messages: right.messages
       }
     }
   end
@@ -56,7 +57,7 @@ defmodule MJ.Inventory.Blender do
         applications: nil,
         parameters: nil,
         valid?: false,
-        errors: ["Base class #{left.name} is invalid" | right.errors]
+        messages: [Message.error("inheritance error:base class #{left.name} is invalid") | right.messages]
       }
     }
   end
@@ -72,13 +73,15 @@ defmodule MJ.Inventory.Blender do
 
   @spec do_blend(t(), t(), t()) :: {:ok, t()}
   defp do_blend(left, right, result) do
+    {merged, warnings} = Merge.deep_merge(left.parameters, right.parameters, "")
     {
       :ok,
       %{
         result |
         classes: right.classes,
         applications: left.applications ++ right.applications,
-        parameters: Merge.deep_merge(left.parameters, right.parameters)
+        parameters: merged,
+        messages: warnings ++ right.messages
       }
     }
   end
@@ -89,39 +92,80 @@ defmodule MJ.Inventory.Blender do
     Helper module that implements the merging of maps
     """
 
-    def resolve(key, left, right) when is_list(left) and is_list(right)  do
-      {key, left ++ right}
+    ### HELPER
+    def context("", key) do
+      key end
+    def context(name, key) do
+      "'#{name}'.#{key}" end
+
+    ### MERGE NAMES IN MAPS
+
+    # If the name starts with `~` and the values is a map or list then don't merge but overwrite
+    def merge_name("~" <> key, map, value, _name) when is_map(map) and (is_list(value) or is_map(value)) do
+      {key, {value, []}}
     end
 
-    def resolve(key, left, right) when is_map(left) and is_map(right)  do
-      {key, deep_merge(left, right)}
+    # For all other names merge the values.
+    def merge_name(key, map, value, name) when is_map(map) do
+      {key, deep_merge(map[key], value, context(name, key))}
     end
 
-    def resolve(key, _left, right) do
-      {key, right}
+    ### DEEP MERGE VALUES
+    def deep_merge(left, right, name \\ "")
+
+    # TWO MAPS.
+    def deep_merge(left, right, name) when is_map(left) and is_list(right) do
+      {right, [Message.warning("overwrites map '#{name}' with list")]}
     end
 
-    def match("~" <> key, _map, value) do
-      {key, value}
+    def deep_merge(left, right, name) when is_map(left) and not is_map(right) do
+      {right, [Message.warning("overwrites map '#{name}' with scalar")]}
     end
 
-    def match(key, map, value) do
-      resolve(key, map[key], value)
-    end
-
-    def deep_merge(%{} = left, %{} = right) do
-      Enum.map(
-        right,
-        fn {key, value} ->
-          match(key, left, value)
-        end
-      )
-      |> Enum.into(left)
-    end
-
-    def deep_merge(%{} = _left, right) when is_binary(right) do
-      # TODO this is a error on certain levels
+    def deep_merge(left, right, name) when is_map(left) and is_map(right) do
       right
+      |> Enum.map(
+           fn {key, value} ->
+             merge_name(key, left, value, name)
+           end
+         )
+      |> Enum.reduce(
+           {left, []},
+           fn {key, {merged, msg}}, {left, messages} ->
+             case msg do
+               [] -> {Map.put(left, key, merged), messages}
+               msg -> {Map.put(left, key, merged), messages ++ msg}
+             end
+           end
+         )
     end
+
+    # TWO LISTS
+    def deep_merge(left, right, name) when is_list(left) and is_map(right) do
+      {right, [Message.warning("overwrites list '#{name}' with map")]}
+    end
+
+    def deep_merge(left, right, name) when is_list(left) and not is_list(right) do
+      {right, [Message.warning("overwrites list '#{name}' with scalar")]}
+    end
+
+    def deep_merge(left, right, _name) when is_list(left) and is_list(right)  do
+      {left ++ right, []}
+    end
+
+    # SCALARS
+    def deep_merge(left, right, name) when left != nil and is_map(right) do
+      {right, [Message.warning("overwrites scalar '#{name}' with map")]}
+    end
+
+    def deep_merge(left, right, name) when left != nil and is_list(right) do
+      {right, [Message.warning("overwrites scalar '#{name}' with list")]}
+    end
+
+    # For everything else right overwrites left
+    def deep_merge(_left, right, _name) do
+      {right, []}
+    end
+
   end
 end

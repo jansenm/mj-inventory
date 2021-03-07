@@ -1,0 +1,9 @@
+parameters:
+  "a list 1": []
+  "a list 2": []
+  "a map 1":
+    a: 1
+  "a map 2":
+    a: 1
+  "a string 1": ""
+  "a string 2": ""

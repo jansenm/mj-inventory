@@ -25,7 +25,7 @@ defmodule MJ.Repository.File do
   require Logger
 
   import MJ.TreeWalker
-  alias MJ.Inventory.Types.{Class, Node}
+  alias MJ.Inventory.Types.{Class, Node, Message}
 
   @type opts :: keyword()
 
@@ -86,11 +86,11 @@ defmodule MJ.Repository.File do
       case documents do
         [] -> entity.from_map(%{}, name, definition, {nil, path})
         [document] -> entity.from_map(document, name, definition, {nil, path})
-        [_ | _] -> %{entity.from_map(%{}, name, definition, {nil, path}) | valid?: false, errors: ["contains yaml stream"]}
+        [_ | _] -> %{entity.from_map(%{}, name, definition, {nil, path}) | valid?: false, messages: [Message.error("error:file contains yaml stream")]}
       end
     else
       # TODO: make sure definition is forwarded here if the file could be read.
-      {:error, reason} -> %{entity.from_map(%{}, name, "", {nil, path}) | valid?: false, parameters: nil, errors: [reason]}
+      {:error, reason} -> %{entity.from_map(%{}, name, "", {nil, path}) | valid?: false, parameters: nil, messages: [Message.error(reason)]}
     end
   end
 

@@ -2,4 +2,4 @@
 classes:
   - distribution.opensuse.leap
 parameters:
-  version_id = "15.2"
+  version_id: "15.2"

@@ -22,6 +22,7 @@ defmodule MJ.InventoryTest do
   doctest MJ.Inventory
 
   alias MJ.Inventory
+  alias MJ.Inventory.Types.Message
 
   # @moduletag :capture_log
 
@@ -95,7 +96,7 @@ defmodule MJ.InventoryTest do
       {:ok, class1} = Inventory.get(inventory, {:class, "class1"}, :computed)
       assert class1.valid? == false
       assert class1.parameters == nil
-      assert class1.errors == ["parsing error:unknown section »parameteras«"]
+      assert class1.messages == [%Message{severity: :error, message: "parsing error:unknown section »parameteras«"}]
     end
 
     test "node: stores definition", %{inventory: inventory} do
@@ -155,7 +156,7 @@ defmodule MJ.InventoryTest do
       {:ok, node1} = Inventory.get(inventory, {:node, "node1"}, :computed)
       assert node1.valid? == false
       assert node1.parameters == nil
-      assert node1.errors == ["parsing error:unknown section »parameteras«"]
+      assert node1.messages == [%Message{severity: :error, message: "parsing error:unknown section »parameteras«"}]
     end
 
     test "node: can compute values", %{inventory: inventory} do

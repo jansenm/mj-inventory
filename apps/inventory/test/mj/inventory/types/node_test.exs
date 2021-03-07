@@ -21,6 +21,7 @@ defmodule NodeTest do
   use ExUnit.Case
 
   alias MJ.Inventory.Types.Node
+  alias MJ.Inventory.Types.Message
 
   @moduletag :capture_log
 
@@ -56,7 +57,7 @@ defmodule NodeTest do
     end
 
     test "has no errors", context do
-      assert context.entity.errors == []
+      assert context.entity.messages == []
     end
 
     test "returns nil for source_ref", context do
@@ -95,7 +96,7 @@ defmodule NodeTest do
       )
       assert entity.name == "test2"
       assert entity.valid?
-      assert entity.errors == []
+      assert entity.messages == []
       assert entity.classes == ["BaseA", "BaseB"]
       assert entity.parameters == %{"a key" => "a value"}
       assert entity.source_ref == "__STRING__"
@@ -117,7 +118,7 @@ defmodule NodeTest do
       )
       assert entity.name == "test3"
       refute entity.valid?
-      assert entity.errors == ["parsing error:unknown section »thisshouldntbehere«"]
+      assert entity.messages == [%Message{severity: :error, message: "parsing error:unknown section »thisshouldntbehere«"}]
       assert entity.applications == []
       assert entity.classes == []
       assert entity.parameters == nil

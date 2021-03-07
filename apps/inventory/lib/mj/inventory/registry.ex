@@ -104,13 +104,13 @@ defmodule MJ.Inventory.Registry do
     )
   end
 
-  @spec errors(t()) :: [String.t()]
-  def errors(registry) do
+  @spec messages(t()) :: [String.t()]
+  def messages(registry) do
     result = :ets.foldl(
       fn {name, obj}, acc ->
-        case obj.errors do
+        case obj.messages do
           [] -> acc
-          errors -> [{name, errors} | acc]
+          messages -> [{name, messages} | acc]
         end
       end,
       [],

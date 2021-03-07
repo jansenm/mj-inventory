@@ -57,14 +57,14 @@ defmodule MJ.Inventory.Cache do
     )
   end
 
-  def errors(cache) do
+  def messages(cache) do
     result = :ets.foldl(
       fn {name, value, _}, acc ->
         case value do
           {:ok, obj} ->
-            case obj.errors do
+            case obj.messages do
               [] -> acc
-              errors -> [{name, errors} | acc]
+              messages -> [{name, messages} | acc]
             end
         end
       end,

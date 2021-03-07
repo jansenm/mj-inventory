@@ -143,12 +143,16 @@ defmodule MJ.InventoryWeb.InventoryLive do
   end
 
   defp handle_params(:index_errors, _params, _uri, socket) do
+
+    messages = MJ.Inventory.messages(socket.assigns.inventory)
+               |> Enum.group_by(fn {key, _} -> key end, fn {_, value} -> value end)
+               |> Enum.sort_by(fn {key, _} -> key end)
     {
       :noreply,
       socket
       |> socket_remove_object
       |> assign(
-           errors: MJ.Inventory.errors(socket.assigns.inventory),
+           messages: messages,
            title: "Errors",
            page_title: "errors"
          )

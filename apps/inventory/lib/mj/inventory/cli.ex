@@ -152,8 +152,9 @@ defmodule MJ.Inventory.CLI do
     case MJ.Inventory.get(inventory, {:node, name}, :computed) do
       {:ok, %Node{valid?: false} = node} ->
         IO.puts(:stderr, "error:node >#{node.name}< has errors")
-        node.errors
-        |> Enum.each(fn msg -> IO.puts(:stderr, "   #{msg}") end)
+        node.messages
+        |> Enum.filter(fn msg -> msg.severity == :error end)
+        |> Enum.each(fn msg -> IO.puts(:stderr, "   #{msg.message}") end)
         System.halt(1)
       {:ok, %Node{} = node} ->
         node

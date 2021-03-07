@@ -29,6 +29,7 @@ defmodule MJ.Inventory do
   alias MJ.Inventory.Cache
   alias MJ.Inventory.Inheritance
   alias MJ.Inventory.Blender
+  alias MJ.Inventory.Types.Message
 
   @type t :: pid()
 
@@ -45,8 +46,8 @@ defmodule MJ.Inventory do
     GenServer.call(inventory, {:put, node})
   end
 
-  def errors(inventory) do
-    GenServer.call(inventory, {:errors})
+  def messages(inventory) do
+    GenServer.call(inventory, {:messages})
   end
 
   @spec get(t(), {:class | :node, String.t()}) :: {:ok, %Class{} | %Node{}} | {:error, :not_found}
@@ -305,13 +306,13 @@ defmodule MJ.Inventory do
   end
 
   @impl true
-  def handle_call({:errors}, _from, %__MODULE__{} = state) do
+  def handle_call({:messages}, _from, %__MODULE__{} = state) do
     state = if state.cache_valid? do
       state
     else
       ensure_cache(state)
     end
-    {:reply, Cache.errors(state.cache), state}
+    {:reply, Cache.messages(state.cache), state}
   end
 
   @impl true
@@ -361,7 +362,6 @@ defmodule MJ.Inventory do
                  acc
                nil ->
                  # This class is unused.
-                 # TODO: register that somewhere and show to the user.
                  case ensure_cache(state, {:class, name}, [:unused]) do
                    {_, %Class{}} -> acc
                    {_, %Node{}} -> throw :should_not_happen
@@ -384,11 +384,18 @@ defmodule MJ.Inventory do
     result = compute(state, {:node, name})
     badges = case result do
       {:ok, object} ->
-        if object.valid? do
+        badges = if object.valid? do
           badges
         else
           [:invalid | badges]
         end
+        badges = case Enum.find(object.messages, & &1.severity == :warning) do
+          nil ->
+            badges
+          _ ->
+            [:warnings | badges]
+        end
+        badges
     end
     Cache.put(state.cache, {:node, name}, result, badges)
     result
@@ -398,11 +405,19 @@ defmodule MJ.Inventory do
     result = compute(state, {:class, name})
     badges = case result do
       {:ok, object} ->
-        if object.valid? do
-          badges
-        else
-          [:invalid | badges]
+        badges =
+          if object.valid? do
+            badges
+          else
+            [:invalid | badges]
+          end
+        badges = case Enum.find(object.messages, & &1.severity == :warning) do
+          nil ->
+            badges
+          _ ->
+            [:warnings | badges]
         end
+        badges
     end
     Cache.put(state.cache, {:class, name}, result, badges)
     result
@@ -419,7 +434,7 @@ defmodule MJ.Inventory do
           {_, {:ok, result}} -> {:ok, result}
         end
       {:error, :not_found} ->
-        {:ok, %Class{name: name, valid?: false, errors: ["class not defined"]}}
+        {:ok, %Class{name: name, valid?: false, messages: [Message.error("error:class is not defined")]}}
     end
   end
 
@@ -434,7 +449,9 @@ defmodule MJ.Inventory do
               %{
                 result |
                 valid?: false,
-                errors: ["interpolation failed because of circular dependency:#{stack}" | result.errors]
+                messages: [
+                  Message.error("error:interpolation failed because of circular dependency:#{stack}") | result.messages
+                ]
               }
             }
           {:error, :invalid_reference, _stack, what} ->
@@ -443,7 +460,9 @@ defmodule MJ.Inventory do
               %{
                 result |
                 valid?: false,
-                errors: ["interpolation failed because of invalid reference '#{what}'" | result.errors]
+                messages: [
+                  Message.error("interpolation failed because of invalid reference '#{what}'") | result.messages
+                ]
               }
             }
           node ->
@@ -474,7 +493,8 @@ defmodule MJ.Inventory do
              case Registry.get(state.definition, parent) do
                {:error, :not_found} ->
                  case parent do
-                   {:class, name} -> {:ok, %Class{name: name, valid?: false, errors: ["class not defined"]}}
+                   {:class, name} ->
+                     {:ok, %Class{name: name, valid?: false, messages: [Message.error("error:class is not defined")]}}
                  end
                {:ok, _} = result ->
                  result

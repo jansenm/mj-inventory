@@ -24,6 +24,7 @@ defmodule MJ.Inventory.Inheritance do
   alias MJ.Inventory.Registry
   alias MJ.Inventory.Types.{Class, Node}
   alias MJ.Inventory.Errors
+  alias MJ.Inventory.Types.Message
 
   def _inheritance_path(%Class{} = class, inheritance_path, stack, registry) do
     if {:class, class.name} in stack do
@@ -57,7 +58,7 @@ defmodule MJ.Inventory.Inheritance do
                  %Class{
                    name: cls,
                    valid?: false,
-                   errors: ["undefined class"]
+                   messages: [Message.error("error:class is not defined")]
                  },
                  acc,
                  stack,

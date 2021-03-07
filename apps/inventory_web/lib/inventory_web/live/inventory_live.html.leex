@@ -20,6 +20,6 @@
     <% end %>
 
     <%= if @live_action == :index_errors do %>
-        <%= render(MJ.InventoryWeb.ClassView, "_errors.html", errors: @errors, socket: @socket) %>
+        <%= render(MJ.InventoryWeb.ClassView, "_errors.html", messages: @messages, socket: @socket) %>
     <% end %>
 </div>

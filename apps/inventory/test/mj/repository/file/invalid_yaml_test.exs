@@ -21,7 +21,7 @@ defmodule MJ.Repository.File.InvalidYamlTest do
   use ExUnit.Case
 
   alias MJ.Repository.File, as: FileStore
-  alias MJ.Inventory.Types.{Node}
+  alias MJ.Inventory.Types.{Node, Message}
 
   @moduletag :capture_log
 
@@ -56,7 +56,7 @@ defmodule MJ.Repository.File.InvalidYamlTest do
       path = Path.join([Path.expand("./test/data/invalid_yaml"), "nodes/valid.yaml"])
       assert %Node{
                valid?: true,
-               errors: [],
+               messages: [],
                source_ref: {nil, ^path},
                parameters: %{
                  "motd" => "Hello"
@@ -76,7 +76,7 @@ defmodule MJ.Repository.File.InvalidYamlTest do
       path = Path.join([Path.expand("./test/data/invalid_yaml"), "nodes/valid_yaml_invalid_key.yaml"])
       assert %Node{
                valid?: false,
-               errors: ["parsing error:unknown section »invalidkey«"],
+               messages: [%Message{severity: :error, message: "parsing error:unknown section »invalidkey«"}],
                source_ref: {nil, ^path},
                parameters: %{}
              } = invalid_node
@@ -94,7 +94,12 @@ defmodule MJ.Repository.File.InvalidYamlTest do
       path = Path.join([Path.expand("./test/data/invalid_yaml"), "nodes/invalid_yaml.yaml"])
       assert %Node{
                valid?: false,
-               errors: ["parsing error:Unexpected \"yamerl_collection_start\" token following a \"yamerl_scalar\" token at [4:3]"],
+               messages: [
+                 %Message{
+                   severity: :error,
+                   message: "parsing error:Unexpected \"yamerl_collection_start\" token following a \"yamerl_scalar\" token at [4:3]"
+                 }
+               ],
                source_ref: {nil, ^path},
                parameters: nil
              } = valid_node

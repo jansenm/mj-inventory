@@ -11,10 +11,10 @@
 
     <div class="content">
         <dl>
-        <%= for {{type, name}, errors} <- @errors do %>
-            <%= for error <- errors do %>
-            <dt><%= live_patch "#{type} #{name}", to: Routes.inventory_path(@socket, :"show_#{type}", name) %></dd>
-            <dd><%= error %></dd>
+        <%= for {{type, name}, messages} <- @messages  do %>
+            <dt><%= live_patch "#{type} #{name}", to: Routes.inventory_path(@socket, :"show_#{type}", name) %></dt>
+            <%= for msg <- messages |> List.flatten  do %>
+            <dd><%= msg.severity %> - <%= msg.message %></dd>
             <% end %>
         <% end %>
         </dl>

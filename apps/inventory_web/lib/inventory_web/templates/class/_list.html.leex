@@ -22,6 +22,7 @@
             <tr>
                 <td><%= live_patch obj, to: Routes.inventory_path(@socket, :"show_#{@type}", obj) %>
                 <%= if :invalid in badges do %><span class="tag is-danger">invalid</span><% end %>
+                <%= if :warnings in badges do %><span class="tag is-warning">warnings</span><% end %>
                 <%= if :unused in badges do %><span class="tag is-info">unused</span><% end %>
                 </td>
             </tr>
@@ -29,4 +30,4 @@
             </tbody>
         </table>
     </div>
-</section>
+</div>

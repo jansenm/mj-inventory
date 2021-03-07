@@ -21,7 +21,7 @@ defmodule MJ.Inventory.BlenderTest do
   use ExUnit.Case
 
   alias MJ.Inventory.Blender
-  alias MJ.Inventory.Types.{Class, Node}
+  alias MJ.Inventory.Types.{Class, Node, Message}
 
   @moduletag :capture_log
 
@@ -42,19 +42,19 @@ defmodule MJ.Inventory.BlenderTest do
       assert result.classes == []
       assert result.applications == nil
       assert result.parameters == nil
-      assert result.errors == ["Base class left is invalid"]
+      assert result.messages == [%Message{severity: :error, message: "inheritance error:base class left is invalid"}]
     end
 
     test "if right object is invalid" do
       {:ok, result} = Blender.blend(
         %Class{name: "left", valid?: true},
-        %Node{name: "right", valid?: false, errors: ["invalid yaml"]}
+        %Node{name: "right", valid?: false, messages: [Message.error("invalid yaml")]}
       )
       assert result.name == "right"
       assert result.classes == []
       assert result.applications == nil
       assert result.parameters == nil
-      assert result.errors == ["invalid yaml"]
+      assert result.messages == [%Message{severity: :error, message: "invalid yaml"}]
     end
 
     test "if left object is node" do
@@ -117,7 +117,6 @@ defmodule MJ.Inventory.BlenderTest do
   end
 
   describe "handles parameters" do
-
     test "deep merges parameters" do
       {:ok, result} = Blender.blend(
         %Class{
@@ -183,4 +182,34 @@ defmodule MJ.Inventory.BlenderTest do
     end
 
   end
+
+  describe "correctly returns warnings" do
+    test "deep merges parameters" do
+      {:ok, result} = Blender.blend(
+        %Class{
+          name: "left",
+          parameters: %{
+            "a" => ["a list here"]
+          },
+          valid?: true
+        },
+        %Class{
+          name: "right",
+          parameters: %{
+            "a" => "now a string"
+          },
+          valid?: true
+        }
+      )
+      assert result.name == "right"
+      assert result.parameters == %{
+               "a" => "now a string"
+             }
+
+      assert result.messages == [
+               %Message{severity: :warning, message: "overwrites list 'a' with scalar"}
+             ]
+    end
+  end
+
 end
