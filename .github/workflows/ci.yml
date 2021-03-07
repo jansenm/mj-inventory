@@ -5,13 +5,7 @@ on: push
 jobs:
   test:
     name: OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}} / NodeJS ${{matrix.nodejs}}
-
-    # Michael Jansen 2012/03/04 setup-elixir doesn't work with ubuntu 20.04 right now
-    # error: Package libwxgtk3.0-0v5 is not available, but is referred to by another package.
-    # reason: package was renamed from libwxgtk3.0-dev to libwxgtk3.0-gtk3-dev from 18 to 20
-    # issue: https://github.com/erlef/setup-elixir/issues/6
-    # runs-on: ubuntu-latest
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         otp: [ '23.2.1' ]
@@ -29,7 +23,7 @@ jobs:
       ### SETUP VERSIONS
       - name: Setup Elixir
         # https://github.com/erlef/setup-elixir
-        uses: erlef/setup-elixir@v1.0.0
+        uses: erlef/setup-elixir@v1
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
