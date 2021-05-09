@@ -59,7 +59,6 @@ defmodule TestHelper do
   end
 
   def load_reclass_inventory(path) do
-    IO.puts(path)
     {:ok, content} = File.read(Path.expand("#{path}/reclass.json"))
     {:ok, config} = Jason.decode(content)
     [reclass_config: config]
