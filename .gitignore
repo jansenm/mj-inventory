@@ -29,4 +29,6 @@ inventory-*.tar
 .idea/
 *.iml
 
+venv/
+
 
