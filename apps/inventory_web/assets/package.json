@@ -2,32 +2,35 @@
   "repository": {},
   "description": " ",
   "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">= 14.16.1"
+  },
   "scripts": {
-    "deploy": "NODE_ENV=production webpack --mode production",
-    "watch": "webpack --mode development --watch"
+    "deploy": "NODE_ENV=production npx webpack-cli --mode=production",
+    "watch": "npx webpack-cli --mode=development --watch"
   },
   "dependencies": {
     "alpinejs": "^2.8.2",
     "bulma": "^0.9.2",
-    "node-sass": "^5.0.0",
     "phoenix": "file:../../../deps/phoenix",
     "phoenix_html": "file:../../../deps/phoenix_html",
-    "phoenix_live_view": "file:../../../deps/phoenix_live_view",
-    "sass-loader": "^10.2.0"
+    "phoenix_live_view": "file:../../../deps/phoenix_live_view"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
     "@babel/preset-env": "^7.14.4",
     "autoprefixer": "^10.2.6",
     "babel-loader": "^8.0.0",
-    "copy-webpack-plugin": "^5.1.1",
-    "css-loader": "^3.4.2",
-    "hard-source-webpack-plugin": "^0.13.1",
-    "mini-css-extract-plugin": "^0.9.0",
+    "copy-webpack-plugin": "^9.0.0",
+    "css-loader": "^5.2.0",
+    "css-minimizer-webpack-plugin": "^3.0.0",
+    "glob": "^7.1.7",
+    "mini-css-extract-plugin": "^1.6.0",
+    "node-sass": "^6.0.0",
     "nprogress": "^0.2.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.6",
-    "terser-webpack-plugin": "^2.3.2",
-    "webpack": "4.41.5",
-    "webpack-cli": "^3.3.2"
+    "sass-loader": "^11.1.0",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0"
   }
 }

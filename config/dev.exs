@@ -33,9 +33,9 @@ config :inventory_web, MJ.InventoryWeb.Endpoint,
   watchers: [
     node: [
       "node_modules/webpack/bin/webpack.js",
-      "--mode",
-      "development",
-      "--watch-stdin",
+      "--mode=development",
+      "--watch",
+      "--watch-options-stdin",
       cd: Path.expand("../apps/inventory_web/assets", __DIR__)
     ]
   ]

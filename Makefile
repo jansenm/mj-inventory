@@ -11,9 +11,17 @@ THIS_MAKEFILE := $(lastword $(MAKEFILE_LIST))
 ## =======
 all: build test
 
-build: build-before build-do build-after
-build-do:
+build: build-before build-npm build-mix build-after
+build-mix: build-mix-before build-mix-do build-mix-after
+build-mix-do:
 	mix compile
+
+build-npm: build-npm-before build-npm-do build-npm-after
+build-npm-do:
+	cd apps/inventory_web/assets && npm run deploy
+	cd apps/inventory_web && mix phx.digest
+
+rebuild: rebuild-before clean build rebuild-after
 
 build-dependencies: build-dependencies-before build-dependencies-do build-dependencies-after
 build-dependencies-do:
@@ -68,14 +76,13 @@ outdated-npm-do:
 	cd apps/invdentory_web/assets && npm outdated
 
 ## update                > update-npm update-hex
-update: update-before clean update-hex build-dependencies build update-npm test update-after
+update: update-before clean update-hex update-npm build-dependencies build test update-after
 
 ## update-npm            update the npm dependencies
-update-npm: update-npm-before update-npm-do update-npm-after
+update-npm: update-npm-before update-npm-do build-npm update-npm-after
 update-npm-do:
-	cd apps/inventory_web/assets && npm update
-	cd apps/inventory_web/assets && npm run deploy
-	cd apps/inventory_web && mix phx.digest
+	cd apps/inventory_web/assets && npm update --all
+	cd apps/inventory_web/assets && npm install --mode=development
 
 ## update-hex            update the hex dependencies
 update-hex: update-hex-before update-hex-do update-hex-after
