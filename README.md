@@ -1,3 +1,6 @@
+> [!IMPORTANT]  
+> This is the archived branch of the initial implementation.
+
 # MJ Inventory
 
 ![CI](https://github.com/jansenm/mj-inventory/actions/workflows/ci.yml/badge.svg)
