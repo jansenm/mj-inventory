@@ -1,6 +1,0 @@
-classes:
-  - "hardware.laptop"
-  # The base class is specified wrong. Slashes instead of dots.
-  - "distribution/opensuse/tumbleweed"
-parameters:
-  name: "laptop.local"

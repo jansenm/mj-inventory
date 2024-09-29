@@ -1,9 +1,0 @@
-# Install software required for erlang development
-classes:
-  - software.development
-
-parameters:
-  packages:
-    - erlang
-    - erlang-dialyzer
-    - erlang-observer

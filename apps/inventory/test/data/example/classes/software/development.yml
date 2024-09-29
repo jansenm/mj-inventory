@@ -1,6 +1,0 @@
-# General development stuff
-classes:
-
-parameters:
-  packages:
-    - pattern:devel_basis

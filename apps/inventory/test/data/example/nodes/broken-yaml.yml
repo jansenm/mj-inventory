@@ -1,5 +1,0 @@
-parameters:
-  packages:
-    apache: ~
-    tomcat: ~
-    - hello
