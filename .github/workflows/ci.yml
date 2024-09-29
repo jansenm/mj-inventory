@@ -2,81 +2,93 @@ name: CI
 
 on: push
 
+# Sets the ENV `MIX_ENV` to `test` for running tests
+env:
+  MIX_ENV: test
+
+permissions:
+  contents: read
+
 jobs:
   test:
     name: OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}} / NodeJS ${{matrix.nodejs}}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        otp: [ '23.2.1' ]
-        elixir: [ '1.11.2' ]
-        nodejs: [ '12.x' ]
+        otp: [ '26.2.5' ]
+        elixir: [ '1.17.3' ]
 
     steps:
 
       #
       ### CHECKOUT
       - name: Checkout Sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       #
       ### SETUP VERSIONS
       - name: Setup Elixir
         # https://github.com/erlef/setup-elixir
-        uses: erlef/setup-elixir@v1
+        uses: erlef/setup-beam@v1
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
 
-      - name: Setup NodeJS
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{matrix.nodejs}}
-
       #
       ### SETUP/CACHE DEPENDENCIES
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: deps-cache
         with:
-          path: |
-              deps/
-              _build/dev/dialyxir*.plt
-              _build/dev/dialyxir*.plt.hash
-          key: ${{ runner.os }}-${{ matrix.otp}}-${{matrix.elixir}}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-      - run: mix local.rebar --force
-        if: steps.deps-cache.outputs.cache-hit != 'true'
-      - run: mix local.hex --force
-        if: steps.deps-cache.outputs.cache-hit != 'true'
+          path: deps
+          key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-${{ env.cache-name }}-
+
+
+      # Step: Define how to cache the `_build` directory. After the first run,
+      # this speeds up tests runs a lot. This includes not re-compiling our
+      # project's downloaded deps every run.
+      - name: Cache compiled build
+        id: cache-build
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-compiled-build
+        with:
+          path: _build
+          key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-${{ env.cache-name }}-
+            ${{ runner.os }}-mix-
+            
+
+      # Step: Conditionally bust the cache when job is re-run.
+      # Sometimes, we may have issues with incremental builds that are fixed by
+      # doing a full recompile. In order to not waste dev time on such trivial
+      # issues (while also reaping the time savings of incremental builds for
+      # *most* day-to-day development), force a full recompile only on builds
+      # that are retried.
+      - name: Clean to rule out incremental build as a source of flakiness
+        if: github.run_attempt != '1'
+        run: |
+          mix deps.clean --all
+          mix clean
+        shell: sh
+
       - run: mix deps.get
         if: steps.deps-cache.outputs.cache-hit != 'true'
+
       - run: mix deps.compile
         if: steps.deps-cache.outputs.cache-hit != 'true'
 
       #
-      ### SETUP/CACHE NODE STUFF
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        id: node_modules-cache
-        with:
-          path: apps/inventory_web/assets/node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles(format('{0}{1}', github.workspace, '/apps/inventory_web/assets/package-lock.json')) }}
-      - run: npm install --prefix assets
-        if: steps.node_modules-cache.outputs.cache-hit != 'true'
-        working-directory: apps/inventory_web
-
-      #
-      ### BUILD OUR NPM STUFF
-      - run: npm run deploy --prefix assets
-        working-directory: apps/inventory_web
-      - run: mix phx.digest
-        working-directory: apps/inventory_web
-
-      #
       ### BUILD
-      - run: mix compile
-      - run: mix docs
-      - name: Run mix credo
+      - name: Compile
+        run: mix compile --warnings-as-errors
+
+      - name: Source Code Documentation
+        run: mix docs
+
+      - name: Run Credo
         run: |
           mix credo || (
           rc=$?
@@ -87,26 +99,35 @@ jobs:
           exit 1;
           fi
           )
+          
 
-      #
-      ### TEST
-      - run: mix compile
-        env:
-          MIX_ENV: test
+      # Step: Check that the checked in code has already been formatted.
+      # This step fails if something was found unformatted.
+      # Customize this step as desired.
+      - name: Check Formatting
+        run: mix format --check-formatted
 
-      - run: mix test
-        env:
-          MIX_ENV: test
+      # Step: Execute the tests.
+      - name: Run tests
+        run: mix test
 
-      - run: mix test --cover
-        env:
-          MIX_ENV: test
+      # Don't cache PLTs based on mix.lock hash, as Dialyzer can incrementally update even old ones
+      # Cache key based on Elixir & Erlang version (also useful when running in matrix)
+      - name: Restore PLT cache
+        uses: actions/cache@v3
+        id: plt_cache
+        with:
+          key: |
+            ${{ runner.os }}-${{ steps.beam.outputs.elixir-version }}-${{ steps.beam.outputs.otp-version }}-plt
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.beam.outputs.elixir-version }}-${{ steps.beam.outputs.otp-version }}-plt
+          path: |
+            priv/plts
 
-      #
-      ### DIALYZER
-      # we cached this as part of the dependencies above
-      - if: steps.deps-cache.outputs.cache-hit != 'true'
-        run: |
-          mix dialyzer --plt
+      # Create PLTs if no cache was found
+      - name: Create PLTs
+        if: steps.plt_cache.outputs.cache-hit != 'true'
+        run: mix dialyzer --plt
 
-      - run: mix dialyzer --no-check --halt-exit-status
+      - name: Run dialyzer
+        run: mix dialyzer --format github
