@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Unit Tests [coverage]" type="MixExUnitRunConfigurationType" factoryName="Elixir Mix ExUnit">
+    <module name="mj-inventory" />
+    <mix-test>
+      <argument>--export-coverage</argument>
+      <argument>default</argument>
+      <argument>--cover</argument>
+    </mix-test>
+    <module name="mj-inventory" />
+    <module-filters inherit-application-module-filters="true" />
+    <method v="2" />
+  </configuration>
+</component>

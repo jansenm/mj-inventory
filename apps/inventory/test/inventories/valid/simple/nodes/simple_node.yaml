@@ -1,0 +1,12 @@
+# This is just a very simple node without inheritance to check if we can load it.
+
+parameters:
+  integer: 1
+  float: 1.0
+  string: "Hello World"
+  list:
+    - 1
+    - 2
+    - 3
+  map:
+    hello: world

@@ -1,0 +1,54 @@
+# Behaviour Compile Time
+
+## Section
+
+```elixir
+defmodule Store do  
+  @callback load(id :: atom()) :: String.t()
+  @callback save(id :: atom(), content :: String.t()) :: :ok
+end
+
+defmodule Store.File do
+  defp base, do: Application.get_env(:myapp, :store, "~/.myapp/store/") 
+  @behaviour Store
+  @impl Store
+  def load(id) do
+    IO.puts("Loading file from #{Path.join(base(), Atom.to_string(id))}")
+    "# not implemented"
+  end
+  @impl Store
+  def save(id, _content) do
+    IO.puts("Saving  file to #{Path.join(base(), Atom.to_string(id))}")
+    :ok
+  end
+end
+
+defmodule Store.DB do
+  defp connect do Application.get_env(:myapp, :dbstore, "db:connect:string") end
+  @behaviour Store
+  @impl Store
+  def load(id) do
+    IO.puts("Loading from database #{connect()} - #{id}")
+    "# not implemented"
+  end
+  @impl Store
+  def save(id, _content) do
+    IO.puts("Saving to database#{connect()} - #{id}")
+    :ok
+  end
+end
+
+
+defmodule App do
+  @backend Store.File
+  @backend Store.DB
+  def main() do
+    @backend.save(:myapp_config, "todo")
+    @backend.load(:myapp_config)
+  end
+end
+
+App.main()
+
+
+```

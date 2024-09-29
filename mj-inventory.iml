@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="ELIXIR_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/apps/inventory/lib" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/dialyxir" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/erlex" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/tree_walker" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/bunt" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/credo" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/earmark" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/earmark_parser" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/ex_doc" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/file_system" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/jason" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/makeup" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/makeup_elixir" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/makeup_erlang" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/nimble_parsec" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/tree_walker" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/bunt" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/covertool" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/credo" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/file_system" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/jason" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/junit_formatter" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/yamerl" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/yamerl" />
+      <excludeFolder url="file://$MODULE_DIR$/deps" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/expo" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/gettext" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/expo" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/test/lib/gettext" />
+      <excludeFolder url="file://$MODULE_DIR$/_build" />
+      <excludeFolder url="file://$MODULE_DIR$/apps/inventory/cover" />
+      <excludeFolder url="file://$MODULE_DIR$/cover" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="dialyxir" level="project" />
+    <orderEntry type="library" name="erlex" level="project" />
+    <orderEntry type="library" name="ex_doc" level="project" />
+    <orderEntry type="library" name="covertool" level="project" />
+    <orderEntry type="library" name="junit_formatter" level="project" />
+    <orderEntry type="library" name="credo" level="project" />
+    <orderEntry type="library" name="earmark" level="project" />
+    <orderEntry type="library" name="excoveralls" level="project" />
+    <orderEntry type="library" name="exjsx" level="project" />
+    <orderEntry type="library" name="sweet_xml" level="project" />
+    <orderEntry type="library" name="file_system" level="project" />
+    <orderEntry type="library" name="bunt" level="project" />
+    <orderEntry type="library" name="jason" level="project" />
+    <orderEntry type="library" name="earmark_parser" level="project" />
+    <orderEntry type="library" name="makeup_elixir" level="project" />
+    <orderEntry type="library" name="makeup_erlang" level="project" />
+    <orderEntry type="library" name="makeup_c" level="project" />
+    <orderEntry type="library" name="makeup_html" level="project" />
+    <orderEntry type="library" name="floki" level="project" />
+    <orderEntry type="library" name="easyhtml" level="project" />
+    <orderEntry type="library" name="makeup" level="project" />
+    <orderEntry type="library" name="nimble_parsec" level="project" />
+    <orderEntry type="library" name="unicode_set" level="project" />
+    <orderEntry type="library" name="benchee" level="project" />
+    <orderEntry type="library" name="benchee_markdown" level="project" />
+    <orderEntry type="library" name="stream_data" level="project" />
+    <orderEntry type="library" name="gettext" level="project" />
+    <orderEntry type="library" name="expo" level="project" />
+    <orderEntry type="library" name="castore" level="project" />
+  </component>
+</module>

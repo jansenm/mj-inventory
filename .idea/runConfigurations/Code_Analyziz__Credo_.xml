@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Code Analyziz [Credo]" type="MixRunConfigurationType" factoryName="Elixir Mix">
+    <module name="mj-inventory" />
+    <mix>
+      <argument>credo</argument>
+    </mix>
+    <module name="mj-inventory" />
+    <module-filters inherit-application-module-filters="true" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Unit Tests" type="MixExUnitRunConfigurationType" factoryName="Elixir Mix ExUnit">
+    <module name="mj-inventory" />
+    <module name="mj-inventory" />
+    <module-filters inherit-application-module-filters="true" />
+    <method v="2" />
+  </configuration>
+</component>
