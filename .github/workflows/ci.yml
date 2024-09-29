@@ -2,30 +2,26 @@ name: CI
 
 on: push
 
-# Sets the ENV `MIX_ENV` to `test` for running tests
-env:
-  MIX_ENV: test
-
 permissions:
   contents: read
 
 jobs:
-  test:
-    name: OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}} / NodeJS ${{matrix.nodejs}}
+
+  build:
+    name: OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}} :: build
     runs-on: ubuntu-latest
+    env:
+      MIX_ENV: dev
     strategy:
       matrix:
         otp: [ '26.2.5' ]
         elixir: [ '1.17.3' ]
 
     steps:
-
-      #
       ### CHECKOUT
-      - name: Checkout Sources
+      - name: Checkout
         uses: actions/checkout@v4
 
-      #
       ### SETUP VERSIONS
       - name: Setup Elixir
         # https://github.com/erlef/setup-elixir
@@ -34,7 +30,6 @@ jobs:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
 
-      #
       ### SETUP/CACHE DEPENDENCIES
       - name: Cache dependencies
         uses: actions/cache@v3
@@ -43,7 +38,6 @@ jobs:
           path: deps
           key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-${{ env.cache-name }}-
-
 
       # Step: Define how to cache the `_build` directory. After the first run,
       # this speeds up tests runs a lot. This includes not re-compiling our
@@ -59,7 +53,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-mix-${{ env.cache-name }}-
             ${{ runner.os }}-mix-
-            
+      
 
       # Step: Conditionally bust the cache when job is re-run.
       # Sometimes, we may have issues with incremental builds that are fixed by
@@ -80,7 +74,6 @@ jobs:
       - run: mix deps.compile
         if: steps.deps-cache.outputs.cache-hit != 'true'
 
-      #
       ### BUILD
       - name: Compile
         run: mix compile --warnings-as-errors
@@ -99,17 +92,12 @@ jobs:
           exit 1;
           fi
           )
-          
 
       # Step: Check that the checked in code has already been formatted.
       # This step fails if something was found unformatted.
       # Customize this step as desired.
       - name: Check Formatting
         run: mix format --check-formatted
-
-      # Step: Execute the tests.
-      - name: Run tests
-        run: mix test
 
       # Don't cache PLTs based on mix.lock hash, as Dialyzer can incrementally update even old ones
       # Cache key based on Elixir & Erlang version (also useful when running in matrix)
@@ -131,3 +119,79 @@ jobs:
 
       - name: Run dialyzer
         run: mix dialyzer --format github
+
+  test:
+
+    name: OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}} :: test
+    runs-on: ubuntu-latest
+    env:
+      MIX_ENV: dev
+    strategy:
+      matrix:
+        otp: [ '26.2.5' ]
+        elixir: [ '1.17.3' ]
+
+    steps:
+      #
+      ### CHECKOUT
+      - name: Checkout Sources
+        uses: actions/checkout@v4
+
+      ### SETUP VERSIONS
+      - name: Setup Elixir
+        # https://github.com/erlef/setup-elixir
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+
+      ### SETUP/CACHE DEPENDENCIES
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        id: deps-cache
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-${{ env.cache-name }}-
+
+      # Step: Define how to cache the `_build` directory. After the first run,
+      # this speeds up tests runs a lot. This includes not re-compiling our
+      # project's downloaded deps every run.
+      - name: Cache compiled build
+        id: cache-build
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-compiled-build
+        with:
+          path: _build
+          key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-${{ env.cache-name }}-
+            ${{ runner.os }}-mix-
+            
+      # Step: Conditionally bust the cache when job is re-run.
+      # Sometimes, we may have issues with incremental builds that are fixed by
+      # doing a full recompile. In order to not waste dev time on such trivial
+      # issues (while also reaping the time savings of incremental builds for
+      # *most* day-to-day development), force a full recompile only on builds
+      # that are retried.
+      - name: Clean to rule out incremental build as a source of flakiness
+        if: github.run_attempt != '1'
+        run: |
+          mix deps.clean --all
+          mix clean
+        shell: sh
+
+      - run: mix deps.get
+        if: steps.deps-cache.outputs.cache-hit != 'true'
+
+      - run: mix deps.compile
+        if: steps.deps-cache.outputs.cache-hit != 'true'
+
+      ### BUILD
+      - name: Compile
+        run: mix compile --warnings-as-errors
+
+      # Step: Execute the tests.
+      - name: Run tests
+        run: mix test
