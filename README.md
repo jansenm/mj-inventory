@@ -1,5 +1,6 @@
 > [!IMPORTANT]  
-> This is the archived branch of the initial implementation.
+> This is a reimplementatin.  Its not anywhere finished yet. Expect force pushes, breaking and
+> a lot of other inconveniences
 
 # MJ Inventory
 
