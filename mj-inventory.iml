@@ -67,5 +67,6 @@
     <orderEntry type="library" name="gettext" level="project" />
     <orderEntry type="library" name="expo" level="project" />
     <orderEntry type="library" name="castore" level="project" />
+    <orderEntry type="library" name="groovy-4.0.14" level="project" />
   </component>
 </module>

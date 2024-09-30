@@ -1,0 +1,60 @@
+name: mj-inventory-v2
+
+services:
+  jenkins:
+    image: "jenkins/jenkins:2.478-jdk21"
+    ports:
+      - "8080:8080"
+    environment:
+      JENKINS_JAVA_OPTS: -Djenkins.install.runSetupWizard=false -Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true
+      CASC_JENKINS_CONFIG: /var/jenkins_home/jenkins-configuration.yaml
+      JENKINS_ADMIN_ID: mjansen
+      JENKINS_ADMIN_PASSWORD: mjansen
+    configs:
+      - source: jenkins-jcac-config
+        target: /var/jenkins_home/jenkins-configuration.yaml
+      - source: jenkins-seed
+        target: /var/jenkins_home/jenkins-seed.yaml
+      - source: jenkins-plugins
+        target: /usr/share/jenkins/ref/plugins.txt
+    volumes:
+      - type: volume
+        source: jenkins_home
+        target: /var/jenkins_home
+      - type: bind
+        read_only: true
+        source: ../.git/
+        target: /srv/git/project
+    networks:
+      - jenkins
+    depends_on:
+      jenkins-plugin-update:
+          condition: service_completed_successfully
+
+  jenkins-plugin-update:
+    image: "jenkins/jenkins:2.478-jdk21"
+    command: jenkins-plugin-cli --verbose --plugin-download-directory /var/jenkins_home/plugins --plugin-file /usr/share/jenkins/ref/plugins.txt
+    restart: no
+    configs:
+      - source: jenkins-plugins
+        target: /usr/share/jenkins/ref/plugins.txt
+    volumes:
+      - type: volume
+        source: jenkins_home
+        target: /var/jenkins_home
+    networks:
+      - jenkins
+
+configs:
+  jenkins-jcac-config:
+    file: ./jenkins/jcac-config.yaml
+  jenkins-plugins:
+    file: ./jenkins/plugins.txt
+  jenkins-seed:
+    file: ./jenkins/seed.groovy
+
+volumes:
+  jenkins_home:
+
+networks:
+  jenkins:

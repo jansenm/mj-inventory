@@ -1,0 +1,28 @@
+unclassified:
+  location:
+    url: http://localhost:8080/
+
+jenkins:
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+          - id: "${JENKINS_ADMIN_ID}"
+            password: "${JENKINS_ADMIN_PASSWORD}"
+
+  authorizationStrategy:
+    globalMatrix:
+      entries:
+        - group:
+            name: "authenticated"
+            permissions:
+              - "Overall/Administer"
+        - user:
+            name: "anonymous"
+            permissions:
+              - "Overall/Read"
+
+jobs:
+  - file: /var/jenkins_home/jenkins-seed.yaml
+
+
