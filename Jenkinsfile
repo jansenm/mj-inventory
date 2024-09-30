@@ -4,7 +4,7 @@
 pipeline {
 
     agent {
-        label "elixir"
+        label "built-in"
     }
 
     options {
