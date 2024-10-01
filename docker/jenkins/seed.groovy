@@ -4,10 +4,10 @@ multibranchPipelineJob('build') {
     branchSources {
         git {
             id('project') // IMPORTANT: use a constant and unique identifier
-            remote('/srv/git/project')
+            remote('')
             includes('*')
             excludes('archive/*')
-        }
+
     }
     orphanedItemStrategy {
         discardOldItems {
