@@ -11,7 +11,7 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: "10"))
     }
 
-    stages {a
+    stages {
 
         stage("Cache [DEV]") {
             when {

@@ -60,6 +60,7 @@ USER root
 RUN zypper install -y \
       java-21-openjdk-headless \
       git-core \
+      elixir \
     && zypper clean
 
 ###
