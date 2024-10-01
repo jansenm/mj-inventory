@@ -4,7 +4,7 @@ multibranchPipelineJob('build') {
     branchSources {
         git {
             id('project') // IMPORTANT: use a constant and unique identifier
-            remote('git@tuxedo-xps')
+            remote('git@tuxedo-xps:elixir/mj-inventory')
             includes('*')
             excludes('archive/*')
             credentialsId('ssh-key-tuxedo-xps-git')
