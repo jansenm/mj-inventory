@@ -7,6 +7,7 @@ multibranchPipelineJob('build') {
             remote('git@tuxedo-xps')
             includes('*')
             excludes('archive/*')
+            credentialsId('ssh-key-tuxedo-xps-git')
 
         }
     }
