@@ -22,6 +22,16 @@ jenkins:
             permissions:
               - "Overall/Read"
 
+  nodes:
+    - permanent:
+        labelString: "elixir otp"
+        launcher: "inbound"
+        name: "tumbleweed-elixir-1"
+        nodeDescription: "Tumbleweed based elixir agent"
+        numExecutors: 2
+        remoteFS: "/home/jenkins/agent"
+        retentionStrategy: "always"
+
 jobs:
   - file: /var/jenkins_home/jenkins-seed.yaml
 

@@ -27,9 +27,28 @@ services:
         target: /srv/git/project
     networks:
       - jenkins
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/login"]
     depends_on:
       jenkins-plugin-update:
           condition: service_completed_successfully
+
+  jenkins-agent-elixir:
+    image: "jenkins-agent/tumbleweed-elixir"
+    build:
+      context: "jenkins-agent"
+      dockerfile: "tumbleweed-elixir/Dockerfile"
+    command: > 
+      -webSocket
+      -secret 1e4e46d01f7c7a3d43030810cacec3b2138af4775048d60a18e86f8ec3b539db
+      -name "tumbleweed-elixir-1"
+      -url http://jenkins:8080
+    stdin_open: true
+    networks:
+      - jenkins
+    depends_on:
+      jenkins:
+        condition: service_healthy
 
   jenkins-plugin-update:
     image: "jenkins/jenkins:2.478-jdk21"
@@ -44,6 +63,8 @@ services:
         target: /var/jenkins_home
     networks:
       - jenkins
+    profiles:
+      - init
 
 configs:
   jenkins-jcac-config:

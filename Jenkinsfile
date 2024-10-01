@@ -4,14 +4,14 @@
 pipeline {
 
     agent {
-        label "built-in"
+        label "elixir"
     }
 
     options {
         buildDiscarder(logRotator(numToKeepStr: "10"))
     }
 
-    stages {
+    stages {a
 
         stage("Cache [DEV]") {
             when {
@@ -80,7 +80,6 @@ pipeline {
                           onlyStable         : false,
                           sourceEncoding     : 'ASCII',
                           zoomCoverageChart  : false])
-
                 }
             }
         }
