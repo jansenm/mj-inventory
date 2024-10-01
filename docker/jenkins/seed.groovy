@@ -4,10 +4,11 @@ multibranchPipelineJob('build') {
     branchSources {
         git {
             id('project') // IMPORTANT: use a constant and unique identifier
-            remote('')
+            remote('git@tuxedo-xps')
             includes('*')
             excludes('archive/*')
 
+        }
     }
     orphanedItemStrategy {
         discardOldItems {

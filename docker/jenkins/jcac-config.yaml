@@ -43,7 +43,6 @@ credentials:
               description: "ssh-key to access git@tuxedo-xps from jenkins"
               id: "ssh-key-tuxedo-xps-git"
               passphrase: "${JENKINS_GIT_SSH_KEY_PASSPHRASE}"
-              # "{AQAAABAAAAAgPrNatDwI1htukd5maqPQ+5hPehGFmrlk8HWAGsX2Zgz6nyzFfjJnqzEIdHwwmc3h}"
               privateKeySource:
                 directEntry:
                   privateKey: "${JENKINS_GIT_SSH_KEY}"

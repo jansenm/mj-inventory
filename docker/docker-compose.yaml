@@ -10,6 +10,8 @@ services:
       CASC_JENKINS_CONFIG: /var/jenkins_home/jenkins-configuration.yaml
       JENKINS_ADMIN_ID: mjansen
       JENKINS_ADMIN_PASSWORD: mjansen
+      JENKINS_GIT_SSH_KEY_PASSPHRASE: ${JENKINS_GIT_SSH_KEY_PASSPHRASE}"
+      JENKINS_GIT_SSH_KEY: ${JENKINS_GIT_SSH_KEY}"
     configs:
       - source: jenkins-jcac-config
         target: /var/jenkins_home/jenkins-configuration.yaml
