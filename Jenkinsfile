@@ -23,7 +23,7 @@ pipeline {
 
         stage("Cache [DEV]") {
             when {
-                branch "master"
+                branch "main"
             }
             environment {
                 MIX_ENV = "dev"
@@ -72,10 +72,11 @@ pipeline {
 
                 script {
                     def coverrc = sh returnStatus: true, script: "mix test --cover"
+                    echo coverrc
                     switch(coverrc) {
-                        case 0: break
-                        case 1: unstable("Test Coverage to low"); break
-                        default: error("Test Coverage failed"); break
+                        case "0": break
+                        case "1": unstable("Test Coverage to low"); break
+                        default: error("Test Coverage failed with error ${coverrc}"); break
                     }
                 }
             }
