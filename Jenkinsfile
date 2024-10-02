@@ -13,6 +13,14 @@ pipeline {
 
     stages {
 
+        stage("Other") {
+            steps {
+                script {
+                    currentBuild.description = env.CHANGE_TITLE
+                }
+            }
+        }
+
         stage("Cache [DEV]") {
             when {
                 branch "master"
