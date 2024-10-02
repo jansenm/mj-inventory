@@ -63,7 +63,7 @@ pipeline {
                 sh "mix compile"
 
                 script {
-                    dev coverrc = sh returnStatus: true, script: "mix test --cover"
+                    def coverrc = sh returnStatus: true, script: "mix test --cover"
                     switch(coverrc) {
                         case 0: break
                         case 1: unstable("Test Coverage to low"); break
