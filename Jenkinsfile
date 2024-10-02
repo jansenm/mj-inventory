@@ -61,7 +61,15 @@ pipeline {
                 sh "mix deps.compile"
 
                 sh "mix compile"
-                sh "mix test --cover"
+
+                script {
+                    dev coverrc = sh returnStatus: true, script: "mix test --cover"
+                    switch(coverrc) {
+                        case 0: break
+                        case 1: unstable("Test Coverage to low"); break
+                        default: error("Test Coverage failed"); break
+                    }
+                }
             }
             post {
                 success {

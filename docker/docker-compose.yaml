@@ -10,8 +10,8 @@ services:
       CASC_JENKINS_CONFIG: /var/jenkins_home/jenkins-configuration.yaml
       JENKINS_ADMIN_ID: mjansen
       JENKINS_ADMIN_PASSWORD: mjansen
-      JENKINS_GIT_SSH_KEY_PASSPHRASE: ${JENKINS_GIT_SSH_KEY_PASSPHRASE}"
-      JENKINS_GIT_SSH_KEY: ${JENKINS_GIT_SSH_KEY}"
+      JENKINS_GIT_SSH_KEY_PASSPHRASE: ${JENKINS_GIT_SSH_KEY_PASSPHRASE}
+      JENKINS_GIT_SSH_KEY: ${JENKINS_GIT_SSH_KEY}
     configs:
       - source: jenkins-jcac-config
         target: /var/jenkins_home/jenkins-configuration.yaml
@@ -23,6 +23,10 @@ services:
       - type: volume
         source: jenkins_home
         target: /var/jenkins_home
+    extra_hosts:
+      # host.docker.internal
+      # host.gateway
+      - "${HOSTNAME}=host-gateway"
     networks:
       - jenkins
     healthcheck:
@@ -42,12 +46,11 @@ services:
       -secret 1e4e46d01f7c7a3d43030810cacec3b2138af4775048d60a18e86f8ec3b539db
       -name "tumbleweed-elixir-1"
       -url http://jenkins:8080
-    volumes:
-      - type: bind
-        read_only: true
-        source: ../.git/
-        target: /srv/git/project
     stdin_open: true
+    extra_hosts:
+      # host.docker.internal
+      # host.gateway
+      - "${HOSTNAME}=host-gateway"
     networks:
       - jenkins
     healthcheck:

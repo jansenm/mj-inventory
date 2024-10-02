@@ -58,8 +58,10 @@ ENTRYPOINT ["/usr/local/bin/jenkins-agent"]
 ### SETUP DEVELOPMENT TOOLS
 USER root
 RUN zypper install -y \
+      openssh-clients \
       java-21-openjdk-headless \
       git-core \
+      erlang-dialyzer \
       elixir \
     && zypper clean
 
