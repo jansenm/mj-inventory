@@ -54,6 +54,7 @@ defmodule MJ.Inventory.Inheritance do
              {:ok, parent} ->
                _inheritance_path(parent, acc, stack, registry)
              {:error, :not_found} ->
+                storemod.put(store)
                _inheritance_path(
                  %Class{
                    name: cls,
